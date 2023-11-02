@@ -1,0 +1,40 @@
+{
+  "extends": "@tsconfig/react-native/tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    // Path alias config
+    "baseUrl": ".",
+    "paths": {
+      "~components/*": [
+        "src/components/*"
+      ],
+      "~services/*": [
+        "src/services/*"
+      ],
+      "~zustands/*": [
+        "src/zustands/*"
+      ],
+      "~modules/*": [
+        "src/modules/*"
+      ],
+      "~configs/*": [
+        "src/configs/*"
+      ],
+      "~utils/*": [
+        "src/utils/*"
+      ],
+      "~hooks/*": [
+        "src/hooks/*"
+      ],
+      "~views/*": [
+        "src/views/*"
+      ],
+      "~assets/*": [
+        "src/assets/*"
+      ]
+    },
+    "lib": [
+      "dom"
+    ]
+  },
+}
