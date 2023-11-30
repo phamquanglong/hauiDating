@@ -1,83 +1,47 @@
-import {useEffect} from 'react';
-import useGlobalModalController from './useGlobalModalController';
-import {usePlantingSettingsStore} from '~zustands/usePlantingSettingsStore';
-import {useServices} from '~services/translate';
-import useHomeStore from '~zustands/useHomeStore';
-import SoundPlayer from 'react-native-sound-player';
-import {TestIds, useInterstitialAd} from 'react-native-google-mobile-ads';
+import {useEffect, useState} from 'react';
+import {Alert} from 'react-native';
+import GetLocation from 'react-native-get-location';
+import UserApi from '~apis/user.api';
+import {useSuggestUsers} from '~zustands/useSuggestUsers';
+import {useUserInfo} from '~zustands/useUserInfo';
 
 const useHomeScreenController = () => {
-  const isPlant = useHomeStore(state => state.isPlant);
-  const onPlant = useHomeStore(state => state.onPlant);
-  const onGiveUp = useHomeStore(state => state.onGiveUp);
-  const timer = useHomeStore(state => state.timer);
-  const isSuccess = useHomeStore(state => state.isSuccess);
-  const audio = useHomeStore(state => state.audio);
-  const setCoins = useHomeStore(state => state.setCoins);
-  const coins = useHomeStore(state => state.coins);
-  const {tag, tree, reward} = usePlantingSettingsStore();
-  const {onShowGlobalModal, onHideGlobalModal} = useGlobalModalController();
-  const {t} = useServices();
+  const {userInfo, setUserInfo} = useUserInfo();
+  const {suggestUsers, setSuggestUsers} = useSuggestUsers();
+  const [loading, setLoading] = useState(true);
 
-  const {isLoaded, isClosed, load, show} = useInterstitialAd(
-    TestIds.INTERSTITIAL,
-    {
-      requestNonPersonalizedAdsOnly: true,
-    },
-  );
   useEffect(() => {
-    if (isClosed) {
-      setCoins(coins + reward);
-      onHideGlobalModal();
-    }
-  }, [isClosed]);
+    UserApi.getInfo().then(res => {
+      setUserInfo(res.data);
+    });
+    UserApi.getSuggestUser().then(res => {
+      setSuggestUsers(res.data);
+      setLoading(prv => !prv);
+    });
+  }, []);
 
-  const onHandleHomeBtn = isPlant
-    ? () =>
-        onShowGlobalModal({
-          message: t.do('home.give_up_question'),
-          visible: true,
-          yesNoOption: {
-            visible: true,
-            onNo: onHideGlobalModal,
-            onYes: () => {
-              onGiveUp();
-              onHideGlobalModal();
-            },
+  useEffect(() => {
+    GetLocation.getCurrentPosition({
+      enableHighAccuracy: true,
+      timeout: 60000,
+    }).then(location => {
+      userInfo &&
+        UserApi.updateUserInformation({
+          profile: {
+            ...userInfo.profile,
+            latitude: location.latitude,
+            longitude: location.longitude,
           },
-        })
-    : onPlant;
-
-  useEffect(() => {
-    if (!audio?.isPlaying) {
-      SoundPlayer.stop();
-    }
-  }, [audio]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      load();
-      console.log('isLoading', isLoaded);
-    }
-  }, [isSuccess]);
-
-  const onRemoveOrDoubleCoins = () => {
-    if (isSuccess) {
-      show();
-    }
-  };
+          hobbies: userInfo.userHobbies.map(i => i.id),
+        });
+      // .then(res => console.log('ass', res));
+    });
+  }, [userInfo]);
 
   return {
-    isPlant,
-    onHandleHomeBtn,
-    tag,
-    timer,
-    t,
-    isSuccess,
-    tree,
-    onShowGlobalModal,
-    onHideGlobalModal,
-    onRemoveOrDoubleCoins,
+    userInfo,
+    suggestUsers,
+    loading,
   };
 };
 

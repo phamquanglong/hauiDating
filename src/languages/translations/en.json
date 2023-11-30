@@ -1,0 +1,100 @@
+{
+  "startUp": {
+    "nextStep": "Next",
+    "start": "Start",
+    "des_1": "Connecting like-minded people from all parts of the country",
+    "des_2": "Find your ideal lover",
+    "des_3": "Spread love"
+  },
+  "drawer": {
+    "home": "Home",
+    "message": "Message",
+    "history": "History",
+    "setting": "Settings"
+  },
+  "login": {
+    "username": "Username",
+    "usernamePlaceholder": "Enter your username",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "title": "Login",
+    "noAccount": "Have no account?"
+  },
+  "register": {
+    "title": "Register",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "placeholder": "Enter your",
+    "confirmPassword": "Confirm password",
+    "confirmPlaceholder": "Re-enter your password",
+    "notMatch": "Passwords do not match",
+    "emailInvalidate": "Email invalidate",
+    "passwordInvalidate": "Password must have at least 8 characters, 1 uppercase letter, 1 number and 1 special character",
+    "success": "Register successfully!"
+  },
+  "setupProfile": {
+    "basicInfo": "Basic Info",
+    "hobbies": "Hobbies",
+    "choosePic": "Choose your picture",
+    "settings": "Settings",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "gender": "Gender",
+    "birthday": "Birthday",
+    "aboutMe": "About me",
+    "next": "Next",
+    "previous": "Previous",
+    "done": "Done",
+    "placeholder": "Enter your",
+    "hello": "Hello",
+    "letCreate": "Let's create your profile",
+    "genderType": {
+      "male": "Male",
+      "female": "Female",
+      "more": "More"
+    },
+    "searchPlaceholder": "Search hobbies...",
+    "pickItems": "Pick hobbies",
+    "selected": "selected",
+    "hobbiesTypes": {
+      "hiking": "Hiking",
+      "traveling": "Traveling",
+      "cooking": "Cooking",
+      "photography": "Photography",
+      "reading": "Reading",
+      "swimming": "Swimming",
+      "running": "Running",
+      "painting": "Painting",
+      "yoga": "Yoga",
+      "gaming": "Gaming",
+      "soccer": "Soccer"
+    },
+    "takePhoto": "Take photo",
+    "selectFromLibrary": "Select from library",
+    "emptyImage": "No image selected",
+    "old": "Old (years)",
+    "distance": "Distance (km)",
+    "success": "Setup profile successfully!"
+  },
+  "logout": "Logout",
+  "nearby": "Near by",
+  "history": "History",
+  "liked": "Liked",
+  "disliked": "Disliked",
+  "liked-me": "Liked me",
+  "save": "Save",
+  "detail": {
+    "aboutMe": "About me",
+    "hobbies": "Hobbies"
+  },
+  "message": {
+    "title": "Message",
+    "placeholder": "Type ..."
+  },
+  "editInfo": {
+    "title": "Edit info",
+    "success": "Update info successfully!"
+  }
+}

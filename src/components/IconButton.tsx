@@ -4,8 +4,8 @@ import {ViewStyle} from 'react-native';
 
 interface IconButtonProps {
   children: ReactNode;
-  onPress: () => void;
-  style?: ViewStyle;
+  onPress?: () => void;
+  style?: ViewStyle[] | ViewStyle;
 }
 
 export const IconButton = (props: IconButtonProps) => {

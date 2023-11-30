@@ -9,9 +9,9 @@ import {
 } from 'react-native';
 import ButtonPrimary from './ButtonPrimary';
 import {Spacer} from './Spacer';
-import {useServices} from '~services/translate';
 import {colors} from '~utils/colors';
 import useGlobalModalController from '~hooks/useGlobalModalController';
+import {useTranslation} from 'react-i18next';
 
 const YesNoOption = (props: {
   value: {
@@ -21,11 +21,11 @@ const YesNoOption = (props: {
   };
 }) => {
   const {visible, onNo, onYes} = props.value;
-  const {t} = useServices();
+  const {t} = useTranslation();
   return visible ? (
     <View style={styles.yesNoOption}>
       <ButtonPrimary
-        text={t.do('home.cancel')}
+        text={t('home.cancel')}
         onPress={onNo}
         style={[
           {

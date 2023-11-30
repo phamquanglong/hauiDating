@@ -32,7 +32,6 @@ export const useLocalStorage = () => {
       const data = {
         coins,
       };
-      console.log({coins});
       storage.set('data', JSON.stringify(data));
       console.log('the app is closed');
     }

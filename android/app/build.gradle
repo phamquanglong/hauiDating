@@ -73,9 +73,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.hauifocus"
+    namespace "com.dating.haui"
     defaultConfig {
-        applicationId "com.hauifocus"
+        applicationId "com.dating.haui"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

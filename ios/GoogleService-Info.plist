@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.haui.focus</string>
+	<string>com.dating.haui</string>
 	<key>PROJECT_ID</key>
 	<string>hauifocus</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:358486134100:ios:58f98a8e041ddb9c1d4cc1</string>
+	<string>1:358486134100:ios:7202ded7772bf9d41d4cc1</string>
 </dict>
 </plist>

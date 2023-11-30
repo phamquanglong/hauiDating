@@ -4,9 +4,7 @@ import {StyleSheet, View} from 'react-native';
 import {IconButton} from '../IconButton';
 import {faArrowLeft, faBars} from '@fortawesome/free-solid-svg-icons';
 import {colors} from '~utils/colors';
-import {CoinNumber} from '~components/coins/CoinNumber';
 import useHomeStore from '~zustands/useHomeStore';
-import {Audio} from '~components/home/Audio';
 
 export const HeaderHome = ({navigation}: any) => {
   const isPlant = useHomeStore(state => state.isPlant);
@@ -19,6 +17,7 @@ export const HeaderHome = ({navigation}: any) => {
     }
     navigation.openDrawer();
   };
+
   return (
     <View style={styles.container}>
       {isPlant ? (
@@ -32,7 +31,6 @@ export const HeaderHome = ({navigation}: any) => {
           />
         </IconButton>
       )}
-      {isPlant ? <Audio /> : <CoinNumber />}
     </View>
   );
 };

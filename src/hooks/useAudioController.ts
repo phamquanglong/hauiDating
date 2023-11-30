@@ -14,7 +14,6 @@ export const useAudioController = () => {
   async function getInfo() {
     try {
       const info = await SoundPlayer.getInfo();
-      console.log('abc', info);
       return info;
     } catch (e) {
       console.log('There is no song playing', e);

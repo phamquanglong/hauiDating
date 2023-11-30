@@ -31,6 +31,18 @@
       ],
       "~assets/*": [
         "src/assets/*"
+      ],
+      "~apis/*": [
+        "src/apis/*"
+      ],
+      "~routers/*": [
+        "src/routers/*"
+      ],
+      "~store/*": [
+        "src/store/*"
+      ],
+      "~reducers/*": [
+        "src/reducers/*"
       ]
     },
     "lib": [

@@ -4,7 +4,7 @@ import {Text, View, StyleSheet} from 'react-native';
 import {IconButton} from './IconButton';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useNavigation} from '@react-navigation/native';
-import {faArrowLeft} from '@fortawesome/free-solid-svg-icons';
+import {faArrowLeft, faBars} from '@fortawesome/free-solid-svg-icons';
 import {colors} from '~utils/colors';
 
 interface HeaderCustomProps {
@@ -12,11 +12,16 @@ interface HeaderCustomProps {
   title?: string;
   iconRight?: IconDefinition;
   onPressIconRight?: () => void;
+  marginTop?: number;
 }
 
 export const HeaderCustom = (props: HeaderCustomProps) => {
-  const {canGoBack, iconRight, onPressIconRight, title} = props;
-  const navigation = useNavigation();
+  const {canGoBack, iconRight, onPressIconRight, title, marginTop} = props;
+  const navigation = useNavigation<any>();
+
+  const onMenu = () => {
+    navigation.openDrawer();
+  };
 
   const renderGoBack = () => {
     if (canGoBack) {
@@ -29,7 +34,13 @@ export const HeaderCustom = (props: HeaderCustomProps) => {
           />
         </IconButton>
       );
-    } else return <View style={styles.emptyItems} />;
+    } else {
+      return (
+        <IconButton onPress={onMenu} style={{flex: 0.1}}>
+          <FontAwesomeIcon icon={faBars} size={30} color={colors.white} />
+        </IconButton>
+      );
+    }
   };
 
   const renderIconRight = () => {
@@ -43,11 +54,19 @@ export const HeaderCustom = (props: HeaderCustomProps) => {
           />
         </IconButton>
       );
-    } else return <View style={styles.emptyItems} />;
+    } else {
+      return <View style={styles.emptyItems} />;
+    }
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          marginTop: marginTop ?? undefined,
+        },
+      ]}>
       {renderGoBack()}
       <Text style={styles.title}>{title}</Text>
       {renderIconRight()}
@@ -62,7 +81,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 15,
-    backgroundColor: colors.bg_opacity,
+    backgroundColor: colors.primary,
   },
   emptyItems: {
     width: '8%',

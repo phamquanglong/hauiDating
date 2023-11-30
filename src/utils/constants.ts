@@ -1,4 +1,9 @@
-import {faGear, faHome} from '@fortawesome/free-solid-svg-icons';
+import {
+  faGear,
+  faHistory,
+  faHome,
+  faMessage,
+} from '@fortawesome/free-solid-svg-icons';
 import {colors} from '~utils/colors';
 import {images} from '~utils/images';
 
@@ -9,9 +14,24 @@ export enum AUDIO_NAMES {
 
 export enum ROUTE_NAMES {
   HOMESTACK = 'HomeStack',
+  HOMEDRAWER = 'HomeDrawer',
   SETTINGSSTACK = 'SettingsStack',
+  HISTORYSTACK = 'HistoryStack',
+  MESSAGESTACK = 'MessageStack',
   HOME = 'Home',
   SETTINGS = 'Settings',
+  STARTUPCAROUSEL = 'StartUpCarousel',
+  LOGIN = 'Login',
+  REGISTER = 'Register',
+  SETUPPROFILE = 'SetupProfile',
+  HISTORY = 'History',
+  LIKEDTAB = 'LikedTab',
+  DISLIKEDTAB = 'DislikedTab',
+  USERDETAIL = 'UserDetail',
+  MESSAGE = 'Message',
+  CONVERSATION = 'Conversation',
+  EDITINFOSCREEN = 'EditInfoScreen',
+  SCANNERSCREEN = 'ScannerScreen',
 }
 
 export enum LANGUAGE_NAMES {
@@ -31,12 +51,24 @@ export enum NAME_TAGS {
 
 export const siderBarItems = [
   {
-    name: ROUTE_NAMES.HOMESTACK,
+    name: 'drawer.home',
     icon: faHome,
+    navigator: ROUTE_NAMES.HOMESTACK,
   },
   {
-    name: ROUTE_NAMES.SETTINGSSTACK,
+    name: 'drawer.message',
+    icon: faMessage,
+    navigator: ROUTE_NAMES.MESSAGESTACK,
+  },
+  {
+    name: 'drawer.history',
+    icon: faHistory,
+    navigator: ROUTE_NAMES.HISTORYSTACK,
+  },
+  {
+    name: 'drawer.setting',
     icon: faGear,
+    navigator: ROUTE_NAMES.SETTINGSSTACK,
   },
 ];
 
@@ -83,3 +115,32 @@ export const audios = [
     thumbnail: images.thumbnail_audios.bird_singing,
   },
 ];
+
+export const URL = '172.20.10.3';
+// export const URL = 'localhost';
+export const WS_URL = `http://${URL}:8080`;
+
+export const WS_EVENT = {
+  SEND_MESSAGE: 'send_message',
+  RECEIVE_MESSAGE: 'receive_message',
+
+  TYPING: 'typing',
+  TYPING_RES: 'typing_response',
+
+  RECEIVE_USERS_ONLINE: 'receive_users_online',
+
+  SEEN_MESSAGE: 'seen_message',
+  RECEIVE_UPDATE_IS_SEEN_MESSAGE: 'receive_update_is_seen_message',
+
+  DELETE_MESSAGE: 'delete_message',
+  RECEIVE_DELETE_MESSAGE: 'receive_delete_message',
+
+  UNMATCH: 'unmtch',
+  RECEIVE_UNMATCH: 'receive_unmatch',
+};
+
+export enum GENDER {
+  MALE = 'male',
+  FEMALE = 'female',
+  MORE = 'all',
+}

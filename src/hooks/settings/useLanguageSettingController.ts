@@ -1,10 +1,9 @@
+import i18next from 'i18next';
 import {LANGUAGE_NAMES} from '~utils/constants';
-import {useServices} from '~services/translate';
 
 export const useLanguageSettingController = () => {
-  const {t} = useServices();
   const getCurrentLanguage = () => {
-    if (t.getCurrentLanguage() === 'en') {
+    if (i18next.language === 'en') {
       return LANGUAGE_NAMES.ENGLISH;
     } else {
       return LANGUAGE_NAMES.VIETNAMESE;
@@ -14,9 +13,9 @@ export const useLanguageSettingController = () => {
   const changeLanguage = () => {
     // console.log(LANGUAGE_NAMES.ENGLISH, getCurrentLanguage());
     if (LANGUAGE_NAMES.ENGLISH === getCurrentLanguage()) {
-      t.setup('vi');
+      i18next.changeLanguage('vi');
     } else {
-      t.setup('en');
+      i18next.changeLanguage('en');
     }
   };
 

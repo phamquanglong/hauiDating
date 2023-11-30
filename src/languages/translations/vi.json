@@ -1,0 +1,100 @@
+{
+  "startUp": {
+    "nextStep": "Tiếp theo",
+    "start": "Bắt đầu",
+    "des_1": "Kết nối những con người đồng điệu từ mọi miền tổ quốc",
+    "des_2": "Tìm kiếm một nửa lí tưởng của bản thân",
+    "des_3": "Lan tỏa yêu thương"
+  },
+  "drawer": {
+    "home": "Trang chủ",
+    "message": "Tin nhắn",
+    "history": "Lịch sử",
+    "setting": "Cài đặt"
+  },
+  "login": {
+    "username": "Tên đăng nhập",
+    "usernamePlaceholder": "Nhập tên đăng nhập",
+    "password": "Mật khẩu",
+    "passwordPlaceholder": "Nhập mật khẩu",
+    "title": "Đăng nhập",
+    "noAccount": "Bạn chưa có tài khoản?"
+  },
+  "register": {
+    "title": "Đăng ký",
+    "username": "Tên đăng nhập",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "placeholder": "Nhập",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "confirmPlaceholder": "Nhập lại mật khẩu",
+    "notMatch": "Mật khẩu không trùng khớp",
+    "emailInvalidate": "Email không đúng định dạng",
+    "passwordInvalidate": "Mật khẩu phải có ít nhất 8 ký tự, 1 chữ in hoa, 1 số và 1 ký tự đặc biệt",
+    "success": "Đăng ký thành công!"
+  },
+  "setupProfile": {
+    "basicInfo": "Thông tin",
+    "hobbies": "Sở thích",
+    "choosePic": "Chọn ảnh của bạn",
+    "settings": "Cài đặt",
+    "firstName": "Họ",
+    "lastName": "Tên",
+    "email": "Email",
+    "gender": "Giới tính",
+    "birthday": "Ngày sinh",
+    "aboutMe": "Giới thiệu bản thân",
+    "next": "Tiếp theo",
+    "previous": "Quay lại",
+    "done": "Hoàn thành",
+    "placeholder": "Nhập",
+    "hello": "Xin chào",
+    "letCreate": "Bắt đầu tạo hồ sơ của bạn nào",
+    "genderType": {
+      "male": "Nam",
+      "female": "Nữ",
+      "more": "Khác"
+    },
+    "searchPlaceholder": "Tìm kiếm sở thích...",
+    "pickItems": "Chọn sở thích của bạn",
+    "selected": "đã chọn",
+    "hobbiesTypes": {
+      "hiking": "Leo núi",
+      "traveling": "Du lịch",
+      "cooking": "Nấu ăn",
+      "photography": "Nhiếp ảnh",
+      "reading": "Đọc sách",
+      "swimming": "Bơi lội",
+      "running": "Chạy",
+      "painting": "Hội họa",
+      "yoga": "Yoga",
+      "gaming": "Chơi game",
+      "soccer": "Bóng đá"
+    },
+    "takePhoto": "Chụp ảnh",
+    "selectFromLibrary": "Chọn ảnh từ thư viện",
+    "emptyImage": "Không có ảnh nào",
+    "old": "Tuổi (năm)",
+    "distance": "Khoảng cách (km)",
+    "success": "Tạo thông tin tài khoản thành công!"
+  },
+  "logout": "Đăng xuất",
+  "nearby": "Gần đây",
+  "history": "Lịch sử",
+  "liked": "Đã thích",
+  "disliked": "Không thích",
+  "liked-me": "Đã thích mình",
+  "save": "Lưu",
+  "detail": {
+    "aboutMe": "Giới thiệu bản thân",
+    "hobbies": "Sở thích"
+  },
+  "message": {
+    "title": "Tin nhắn",
+    "placeholder": "Aa ..."
+  },
+  "editInfo": {
+    "title": "Chỉnh sửa thông tin",
+    "success": "Chỉnh sửa thông tin thành công!"
+  }
+}

@@ -2,11 +2,11 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import RNBounceable from '@freakycoder/react-native-bounceable';
 import {useHomeStore} from '~zustands/index';
-import {useServices} from '~services/translate';
 import useCountdown from '~hooks/useCountdown';
 import {getTimer} from '~utils/commons';
 import {colors} from '~utils/colors';
 import {ShareViewShot} from '~components/ShareViewShot';
+import {useTranslation} from 'react-i18next';
 
 interface HomeBottomProps {
   onHandleHomeBtn: () => void;
@@ -18,7 +18,7 @@ const HomeBottom = (props: HomeBottomProps) => {
   const timer = useHomeStore(state => state.timer);
   const isSuccess = useHomeStore(state => state.isSuccess);
   const countdown = useCountdown(timer * 60);
-  const {t} = useServices();
+  const {t} = useTranslation();
   const isDisabled = timer === 0;
 
   if (isSuccess !== null) {
@@ -45,7 +45,7 @@ const HomeBottom = (props: HomeBottomProps) => {
         ]}
         disabled={isDisabled}>
         <Text style={styles.textBtn}>
-          {t.do(isPlant ? 'home.give_up' : 'home.plant')}
+          {t(isPlant ? 'home.give_up' : 'home.plant')}
         </Text>
       </RNBounceable>
     </View>

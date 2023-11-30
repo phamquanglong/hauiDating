@@ -3,6 +3,7 @@ import {StyleProp, Text, TextStyle, ViewStyle} from 'react-native';
 import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import RNBounceable from '@freakycoder/react-native-bounceable';
+import {colors} from '~utils/colors';
 
 interface ButtonPrimaryProps {
   text: string;
@@ -10,11 +11,12 @@ interface ButtonPrimaryProps {
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   icon?: IconDefinition;
+  iconRight?: IconDefinition;
   disabled?: boolean;
 }
 
 const ButtonPrimary = (props: ButtonPrimaryProps) => {
-  const {onPress, text, style, textStyle, icon, disabled} = props;
+  const {onPress, text, style, textStyle, icon, disabled, iconRight} = props;
   return (
     <RNBounceable
       disabled={disabled}
@@ -25,7 +27,7 @@ const ButtonPrimary = (props: ButtonPrimaryProps) => {
           flexDirection: 'row',
           alignItems: 'center',
         },
-        icon
+        icon || iconRight
           ? undefined
           : {
               justifyContent: 'center',
@@ -40,6 +42,9 @@ const ButtonPrimary = (props: ButtonPrimaryProps) => {
         />
       )}
       <Text style={textStyle}>{text}</Text>
+      {iconRight && (
+        <FontAwesomeIcon icon={iconRight} size={15} color={colors.black} />
+      )}
     </RNBounceable>
   );
 };

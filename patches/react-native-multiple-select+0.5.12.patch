@@ -1,0 +1,140 @@
+diff --git a/node_modules/react-native-multiple-select/lib/react-native-multi-select.js b/node_modules/react-native-multiple-select/lib/react-native-multi-select.js
+index 9b7a0d7..b54ceb5 100644
+--- a/node_modules/react-native-multiple-select/lib/react-native-multi-select.js
++++ b/node_modules/react-native-multiple-select/lib/react-native-multi-select.js
+@@ -13,10 +13,12 @@ import PropTypes from 'prop-types';
+ import reject from 'lodash/reject';
+ import find from 'lodash/find';
+ import get from 'lodash/get';
+-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
++// import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+ 
+ import styles, { colorPack } from './styles';
+ import nodeTypes from './helpers/nodeTypes';
++import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
++import { faArrowDown, faArrowUp, faCheck, faClose, faSearch, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
+ 
+ // set UIManager LayoutAnimationEnabledExperimental
+ if (UIManager.setLayoutAnimationEnabledExperimental) {
+@@ -24,12 +26,7 @@ if (UIManager.setLayoutAnimationEnabledExperimental) {
+ }
+ 
+ const defaultSearchIcon = (
+-  <Icon
+-    name="magnify"
+-    size={20}
+-    color={colorPack.placeholderTextColor}
+-    style={{ marginRight: 10 }}
+-  />
++  <FontAwesomeIcon icon={faSearch} size={20} color={colorPack.placeholderTextColor} />
+ );
+ 
+ export default class MultiSelect extends Component {
+@@ -226,14 +223,10 @@ export default class MultiSelect extends Component {
+               this._removeItem(item);
+             }}
+           >
+-            <Icon
+-              name="close-circle"
+-              style={{
++            <FontAwesomeIcon icon={faXmarkCircle} size={25} style={{
+                 color: tagRemoveIconColor,
+-                fontSize: 22,
+-                marginLeft: 10
+-              }}
+-            />
++                marginEnd: 2
++              }} />
+           </TouchableOpacity>
+         </View>
+       );
+@@ -400,13 +393,10 @@ export default class MultiSelect extends Component {
+               {item[displayKey]}
+             </Text>
+             {this._itemSelected(item) ? (
+-              <Icon
+-                name="check"
+-                style={{
+-                  fontSize: 20,
+-                  color: selectedItemIconColor
+-                }}
+-              />
++              <FontAwesomeIcon icon={faCheck} style={{
++                fontSize: 20,
++                color: selectedItemIconColor
++              }} />
+             ) : null}
+           </View>
+         </View>
+@@ -613,24 +603,21 @@ export default class MultiSelect extends Component {
+               />
+               {hideSubmitButton && (
+                 <TouchableOpacity onPress={this._submitSelection}>
+-                  <Icon
+-                    name="menu-down"
+-                    style={[
++                  <FontAwesomeIcon icon={faArrowDown} style={[
+                       styles.indicator,
+                       { paddingLeft: 15, paddingRight: 15 },
+                       styleIndicator && styleIndicator,
+-                    ]}
+-                  />
++                    ]} />
+                 </TouchableOpacity>
+               )}
+               {!hideDropdown && (
+-                <Icon
+-                  name="arrow-left"
+-                  size={20}
+-                  onPress={this._clearSelectorCallback}
+-                  color={colorPack.placeholderTextColor}
+-                  style={{ marginLeft: 5 }}
++                <TouchableOpacity 
++                onPress={this._clearSelectorCallback}
++                >
++                  <FontAwesomeIcon icon={faArrowUp} size={20} color={colorPack.placeholderTextColor} 
++                style={{ marginLeft: 5 }}
+                 />
++                </TouchableOpacity>
+               )}
+             </View>
+             <View
+@@ -642,24 +629,6 @@ export default class MultiSelect extends Component {
+               <View style={styleItemsContainer && styleItemsContainer}>
+                 {this._renderItems()}
+               </View>
+-              {!single && !hideSubmitButton && (
+-                <TouchableOpacity
+-                  onPress={() => this._submitSelection()}
+-                  style={[
+-                    styles.button,
+-                    { backgroundColor: submitButtonColor }
+-                  ]}
+-                >
+-                  <Text
+-                    style={[
+-                      styles.buttonText,
+-                      fontFamily ? { fontFamily } : {}
+-                    ]}
+-                  >
+-                    {submitButtonText}
+-                  </Text>
+-                </TouchableOpacity>
+-              )}
+             </View>
+           </View>
+         ) : (
+@@ -717,13 +686,6 @@ export default class MultiSelect extends Component {
+                     >
+                       {this._getSelectLabel()}
+                     </Text>
+-                    <Icon
+-                      name={hideSubmitButton ? 'menu-right' : 'menu-down'}
+-                      style={[
+-                        styles.indicator,
+-                        styleIndicator && styleIndicator,
+-                      ]}
+-                    />
+                   </View>
+                 </TouchableWithoutFeedback>
+               </View>

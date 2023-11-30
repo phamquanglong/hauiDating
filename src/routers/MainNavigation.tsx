@@ -2,10 +2,11 @@ import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
 import MainStackNavigator from './MainStackNavigator';
 import GlobalModal from '../components/GlobalModal';
+import linking from 'linking';
 
 const MainNavigation = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <MainStackNavigator />
       <GlobalModal />
     </NavigationContainer>

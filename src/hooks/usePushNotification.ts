@@ -13,22 +13,30 @@ export const usePushNotification = () => {
   }
 
   async function getToken() {
-    firebase
-      .messaging()
-      .hasPermission()
-      .then(async enabled => {
-        if (enabled) {
-          console.log('123', enabled);
+    try {
+      const fcmToken = await firebase.messaging().getToken();
+      if (fcmToken) {
+        console.log('Your Token : ', fcmToken);
+      }
+    } catch (error) {
+      console.log({error});
+    }
+    // const deviceToken = await firebase.messaging().getToken();
+    // console.log('deviceToken', deviceToken);
+    // firebase
+    //   .messaging()
+    //   .hasPermission()
+    //   .then(async enabled => {
+    //     if (enabled) {
+    //       console.log('123', enabled);
 
-          firebase
-            .messaging()
-            .getToken()
-            .then(res => console.log(res))
-            .catch(err => console.log(err));
-          // const deviceToken = await firebase.messaging().getToken();
-          // console.log(deviceToken);
-        }
-      });
+    //       firebase
+    //         .messaging()
+    //         .getToken()
+    //         .then(res => console.log(res))
+    //         .catch(err => console.log(err));
+    //     }
+    //   });
   }
 
   return {

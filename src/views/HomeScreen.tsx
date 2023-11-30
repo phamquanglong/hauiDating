@@ -1,97 +1,74 @@
-import React, {ReactNode, useEffect} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {Linking, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {AnimatedContainer} from '~components/AnimatedContainer';
-import {Tag} from '~components/plantingSettings/Tag';
 import useHomeScreenController from '~hooks/useHomeScreenController';
-import HomeBottom from '~components/HomeBottom';
-import {HeaderHome} from '~components/home/HeaderHome';
-import CircleSliderComponent from '~components/CircleSlider';
 import {colors} from '~utils/colors';
-import {TitleHome} from '~components/home/TitleHome';
-import {images} from '~utils/images';
-import {Position} from '~zustands/useHomeStore';
-import ButtonPrimary from '~components/ButtonPrimary';
-import {Spacer} from '~components/Spacer';
-import {faVideo} from '@fortawesome/free-solid-svg-icons';
+import {faBars, faQrcode} from '@fortawesome/free-solid-svg-icons';
+import {IconButton} from '~components/IconButton';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {TitleCustom} from '~components/TitleCustom';
+import BackgroundGradient from '~components/BackgroundGradient';
+import StackCard from '~components/card/StackCard';
+import {IUser} from '~apis/User';
+import AppLoading from '~components/AppLoading';
+import {ROUTE_NAMES} from '~utils/constants';
 
 const HomeScreen = () => {
-  const {
-    isPlant,
-    onHandleHomeBtn,
-    tag,
-    onShowGlobalModal,
-    isSuccess,
-    tree,
-    t,
-    onHideGlobalModal,
-    onRemoveOrDoubleCoins,
-  } = useHomeScreenController();
-  const navigation = useNavigation();
+  const {suggestUsers, loading} = useHomeScreenController();
+  const navigation = useNavigation<any>();
+
+  function handleDeepLink(e) {
+    console.log('linkRoute: ', e);
+    // Then handle redirection to the specific page in the app
+  }
 
   useEffect(() => {
-    if (!isPlant && isSuccess !== null) {
-      const ResultModal: ReactNode = (
-        <View style={styles.modalContainer}>
-          <Text style={{textAlign: 'center', maxWidth: '90%'}}>
-            {t.do(
-              isSuccess
-                ? 'home.title.you_have_planted_1_healthy_tree'
-                : 'home.title.you_can_do_it_better_next_time',
-            )}
-          </Text>
-          <Image
-            source={isSuccess ? tree.icon : images.ic_tree_without_leaves}
-            style={{width: 50, height: 50, marginVertical: 20}}
-          />
-          <View style={{flexDirection: 'row'}}>
-            <ButtonPrimary
-              onPress={onHideGlobalModal}
-              text={t.do('home.ok')}
-              textStyle={{color: colors.text.white}}
-              style={[styles.btn, {backgroundColor: colors.primary}]}
-            />
-            <Spacer horizontal value={10} />
-            <ButtonPrimary
-              onPress={onRemoveOrDoubleCoins}
-              icon={isSuccess ? faVideo : undefined}
-              text={t.do(
-                isSuccess ? 'home.double_coins' : 'home.delete_record',
-              )}
-              textStyle={{
-                color: colors.text.white,
-              }}
-              style={[
-                styles.btn,
-                {
-                  backgroundColor: isSuccess ? colors.bg_yellow : colors.error,
-                  justifyContent: 'center',
-                },
-              ]}
-            />
-          </View>
-        </View>
-      );
-      onShowGlobalModal({
-        visible: true,
-        yesNoOption: {visible: false},
-        children: ResultModal,
-        position: Position.center,
-      });
-    }
-  }, [isPlant, isSuccess]);
+    let subcribtion = Linking.addEventListener('url', handleDeepLink);
+    subcribtion.subscriber;
+
+    return () => {
+      subcribtion.remove();
+    };
+  }, []);
+
+  const onMenu = () => {
+    navigation.openDrawer();
+  };
+
+  const onScanner = () => {
+    navigation.navigate(ROUTE_NAMES.SCANNERSCREEN);
+  };
 
   return (
     <AnimatedContainer style={styles.container}>
-      <View style={styles.flex_1}>
-        <HeaderHome navigation={navigation} />
-        <TitleHome />
-      </View>
-      <CircleSliderComponent />
-      <View style={styles.flex_1}>
-        <Tag item={tag} isAtHome />
-        <HomeBottom onHandleHomeBtn={onHandleHomeBtn} isPlant={isPlant} />
-      </View>
+      <BackgroundGradient style={styles.container}>
+        <View style={styles.header}>
+          <IconButton onPress={onMenu} style={{flex: 0.1}}>
+            <FontAwesomeIcon icon={faBars} size={30} color={colors.white} />
+          </IconButton>
+          <View style={styles.flex_1}>
+            <TitleCustom
+              title={'hauiDating'}
+              textStyle={{
+                color: colors.text.white,
+                fontWeight: 'bold',
+                fontSize: 25,
+              }}
+            />
+          </View>
+          <View style={{flex: 0.1}}>
+            <IconButton onPress={onScanner}>
+              <FontAwesomeIcon icon={faQrcode} size={30} color={colors.white} />
+            </IconButton>
+          </View>
+        </View>
+        {loading ? (
+          <AppLoading />
+        ) : (
+          <StackCard data={suggestUsers as IUser[]} />
+        )}
+      </BackgroundGradient>
     </AnimatedContainer>
   );
 };
@@ -102,7 +79,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     width: '100%',
-    backgroundColor: colors.primary,
+  },
+  header: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
   },
   flex_1: {
     flex: 1,
