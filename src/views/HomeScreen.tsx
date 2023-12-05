@@ -18,7 +18,7 @@ const HomeScreen = () => {
   const {suggestUsers, loading} = useHomeScreenController();
   const navigation = useNavigation<any>();
 
-  function handleDeepLink(e) {
+  function handleDeepLink(e: any) {
     console.log('linkRoute: ', e);
     // Then handle redirection to the specific page in the app
   }

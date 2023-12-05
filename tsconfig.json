@@ -41,9 +41,6 @@
       "~store/*": [
         "src/store/*"
       ],
-      "~reducers/*": [
-        "src/reducers/*"
-      ]
     },
     "lib": [
       "dom"

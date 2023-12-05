@@ -116,8 +116,8 @@ export const audios = [
   },
 ];
 
-export const URL = '172.20.10.3';
-// export const URL = 'localhost';
+// export const URL = '172.20.10.3';
+export const URL = 'localhost';
 export const WS_URL = `http://${URL}:8080`;
 
 export const WS_EVENT = {

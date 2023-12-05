@@ -8,10 +8,7 @@ import {Spacer} from '~components/Spacer';
 import moment from 'moment';
 import {useNavigation} from '@react-navigation/native';
 import {ROUTE_NAMES} from '~utils/constants';
-import {useAppSelector} from '~hooks/useAppSelector';
 import {find} from 'lodash';
-import {useAppDispatch} from '~hooks/useAppDispatch';
-import {actionSelectConversation} from '~reducers/conversations.reducer';
 import {useSocketStore} from '~zustands/useSocketStore';
 
 interface MessageItemProps {
@@ -20,18 +17,10 @@ interface MessageItemProps {
 
 const MessageItem = ({targetUser}: MessageItemProps) => {
   const {navigate} = useNavigation<any>();
-  const dispatch = useAppDispatch();
-  const listPartnersOnline = useAppSelector(
-    state => state.partnerReducer.listPartnersOnline,
-  );
 
-  const listUserOnline = useSocketStore(state => state.listUserOnline);
+  const {listUserOnline} = useSocketStore();
 
-  const handleSelectConversation = (conv: any) => {
-    dispatch(actionSelectConversation(conv));
-  };
   const onPress = () => {
-    handleSelectConversation(targetUser.conv);
     navigate(ROUTE_NAMES.CONVERSATION as never, {
       targetUser: targetUser,
     });
@@ -43,7 +32,7 @@ const MessageItem = ({targetUser}: MessageItemProps) => {
         imageStyle={{borderRadius: 100}}
         source={{uri: targetUser?.avatar}}
         style={styles.avatar}>
-        {find(listPartnersOnline, {
+        {find(listUserOnline, {
           userId: targetUser?.partnerId,
         }) && <View style={styles.dot} />}
       </ImageBackground>

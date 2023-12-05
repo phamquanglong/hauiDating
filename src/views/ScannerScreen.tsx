@@ -1,4 +1,4 @@
-import {ReactNativeScannerView} from '@pushpendersingh/react-native-scanner';
+// import {ReactNativeScannerView} from '@pushpendersingh/react-native-scanner';
 import React from 'react';
 
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
@@ -15,7 +15,7 @@ const ScannerScreen = () => {
   return (
     <View>
       {/* <QRCodeScanner onRead={onSuccess} /> */}
-      <ReactNativeScannerView style={{height, width}} onQrScanned={onSuccess} />
+      {/* <ReactNativeScannerView style={{height, width}} onQrScanned={onSuccess} /> */}
     </View>
   );
 };

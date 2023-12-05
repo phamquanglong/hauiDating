@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {SideBarCustom} from '~components/sideBar/SideBarCustom';
 import {HomeStack} from './HomeStack';
 import {SettingsStack} from './SettingsStack';
@@ -9,11 +9,8 @@ import {
 import {ROUTE_NAMES} from '~utils/constants';
 import {HistoryStack} from './HistoryStack';
 import {MessageStack} from './MessageStack';
-import {useSocketStore} from '~zustands/useSocketStore';
-import {SocketService} from '~services/Socket.service';
-import {ActionInitSocket} from '~reducers/socket.reducer';
-import {useAppDispatch} from '~hooks/useAppDispatch';
 import EditInfoScreen from '~views/EditInfoScreen';
+import {useHandleNoti} from '~hooks/useHandleNoti';
 
 const Drawer = createDrawerNavigator();
 
@@ -22,14 +19,7 @@ const screenOptions: DrawerNavigationOptions = {
 };
 
 export const HomeDrawer = () => {
-  const {setSocket} = useSocketStore();
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    const appSocket = new SocketService();
-    appSocket.connect();
-    setSocket(appSocket);
-    dispatch(ActionInitSocket(appSocket));
-  }, []);
+  useHandleNoti();
 
   return (
     <Drawer.Navigator

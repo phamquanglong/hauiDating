@@ -8,39 +8,31 @@ import {useUserInfo} from '~zustands/useUserInfo';
 import {height} from '~utils/commons';
 import {colors} from '~utils/colors';
 import {isEmpty} from 'lodash';
-import useSocket from '~hooks/useSocket';
-import {useAppDispatch} from '~hooks/useAppDispatch';
-import {callApiGetAllConversations} from '~reducers/conversations.reducer';
-import {useAppSelector} from '~hooks/useAppSelector';
-import {setListPartnersOnlineAction} from '~reducers/partner.reducer';
 import {useSocketStore} from '~zustands/useSocketStore';
+import ConversationApi from '~apis/conversation.api';
 
 const MessageScreen = () => {
   const {t} = useTranslation();
-  const {appSocket} = useSocket();
   const {userInfo} = useUserInfo();
-  const dispatch = useAppDispatch();
-  const {setListUserOnline} = useSocketStore();
 
-  const listConversations = useAppSelector(
-    state => state.conversationsReducer.listConversations,
-  );
+  const {appSocket, setListUserOnline, setListConversation, listConversation} =
+    useSocketStore();
 
-  const selectedConversation = useAppSelector(
-    state => state.conversationsReducer.selectedConversation,
-  );
+  useEffect(() => {
+    ConversationApi.getAllConversation().then(res => {
+      setListConversation(res.data);
+    });
+  }, [setListConversation]);
 
   useEffect(() => {
     if (!isEmpty(appSocket)) {
       appSocket.receiveListUserOnline((data: any) => {
-        console.log('abc');
-        dispatch(setListPartnersOnlineAction(data));
-        // setListUserOnline(data);
+        setListUserOnline(data);
       });
     }
-  }, [appSocket, dispatch]);
+  }, [appSocket, setListUserOnline]);
 
-  const data = listConversations?.map((conv: any) => {
+  const data = listConversation?.map((conv: any) => {
     const item = {
       id: conv?.id,
       fullName:
@@ -60,10 +52,6 @@ const MessageScreen = () => {
     };
     return item;
   });
-
-  useEffect(() => {
-    dispatch(callApiGetAllConversations());
-  }, [dispatch]);
 
   const _renderItem = ({item, index}: {item: any; index: number}) => {
     return <MessageItem targetUser={item} key={index} />;

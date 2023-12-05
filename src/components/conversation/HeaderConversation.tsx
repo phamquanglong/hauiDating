@@ -6,26 +6,28 @@ import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {IconButton} from '~components/IconButton';
 import {TitleCustom} from '~components/TitleCustom';
 import {colors} from '~utils/colors';
+import {ROUTE_NAMES} from '~utils/constants';
 
 interface HeaderConversationProps {
   targetUser: any;
 }
 
 const HeaderConversation = ({targetUser}: HeaderConversationProps) => {
-  const {goBack} = useNavigation();
+  const {goBack, navigate} = useNavigation();
+
+  const onPress = () => {
+    navigate(ROUTE_NAMES.USERDETAIL as never, {
+      id: targetUser.partnerId,
+    });
+  };
 
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-      }}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+    <View style={styles.headerContainer}>
+      <View style={styles.avatarContainer}>
         <IconButton onPress={goBack} style={{padding: 10}}>
           <FontAwesomeIcon icon={faChevronLeft} size={25} />
         </IconButton>
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity style={styles.container} onPress={onPress}>
           <Image source={{uri: targetUser.avatar}} style={styles.avatar} />
           <TitleCustom title={targetUser.fullName} textStyle={styles.name} />
         </TouchableOpacity>
@@ -42,6 +44,12 @@ const HeaderConversation = ({targetUser}: HeaderConversationProps) => {
 };
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 10,
+  },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -57,6 +65,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  avatarContainer: {flexDirection: 'row', alignItems: 'center'},
 });
 
 export default HeaderConversation;

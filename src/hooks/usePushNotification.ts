@@ -1,4 +1,5 @@
 import {firebase} from '@react-native-firebase/messaging';
+import UserApi from '~apis/user.api';
 
 export const usePushNotification = () => {
   async function requestUserPermission() {
@@ -16,7 +17,9 @@ export const usePushNotification = () => {
     try {
       const fcmToken = await firebase.messaging().getToken();
       if (fcmToken) {
-        console.log('Your Token : ', fcmToken);
+        UserApi.postNotificationToken({token: fcmToken}).then(() =>
+          console.log('Your Token : ', fcmToken),
+        );
       }
     } catch (error) {
       console.log({error});

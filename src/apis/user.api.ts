@@ -11,6 +11,16 @@ export default class UserApi {
     return ApiService.get('users/me');
   }
 
+  static pushNotification(id: any, body: {title: string; body: string}) {
+    return ApiService.post(`users/noti/${id}`, body);
+  }
+
+  static postNotificationToken(body: {
+    token: string;
+  }): Promise<AxiosResponse<IUser>> {
+    return ApiService.post('users/notitoken', body);
+  }
+
   static getInfoById(id: string): Promise<AxiosResponse<IUser>> {
     return ApiService.get(`users/${id}`);
   }

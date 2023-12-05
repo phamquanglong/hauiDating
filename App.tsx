@@ -6,7 +6,7 @@
  */
 
 import React, {useCallback, useEffect} from 'react';
-import {StatusBar} from 'react-native';
+import {Alert, StatusBar} from 'react-native';
 
 import MainNavigation from './src/routers/MainNavigation';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -16,9 +16,8 @@ import {ReactNativeFirebase} from '@react-native-firebase/app';
 import {useKeepAwake} from '@sayem314/react-native-keep-awake';
 import {useLocalStorage} from '~hooks/useLocalStorage';
 import {ToastProvider} from 'react-native-toast-notifications';
-import {Provider} from 'react-redux';
-import store from '~store/index';
 import notifee, {AuthorizationStatus} from '@notifee/react-native';
+import messaging from '@react-native-firebase/messaging';
 
 // LogBox.ignoreAllLogs();
 
@@ -52,7 +51,7 @@ function App(): JSX.Element {
     requestUserPermission();
     getToken();
     StatusBar.setBarStyle('light-content', true);
-  }, []);
+  }, [getToken, requestUserPermission]);
 
   useEffect(() => {
     startApp();
@@ -60,13 +59,19 @@ function App(): JSX.Element {
 
   useLocalStorage();
 
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+
+    return unsubscribe;
+  }, []);
+
   return (
     <SafeAreaProvider>
-      <Provider store={store}>
-        <ToastProvider>
-          <MainNavigation />
-        </ToastProvider>
-      </Provider>
+      <ToastProvider>
+        <MainNavigation />
+      </ToastProvider>
     </SafeAreaProvider>
   );
 }

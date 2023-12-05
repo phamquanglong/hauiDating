@@ -36,6 +36,7 @@ export class SocketService implements ISocketService {
   }
 
   sendMessage(message: string, conversationId: number) {
+    console.log({message, conversationId});
     this.socket.emit(WS_EVENT.SEND_MESSAGE, {message, conversationId});
   }
 

@@ -8,9 +8,10 @@ import {isEmpty} from 'lodash';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {StyleSheet, TextInput, View} from 'react-native';
+import UserApi from '~apis/user.api';
 import {IconButton} from '~components/IconButton';
-import {useAppSelector} from '~hooks/useAppSelector';
 import {colors} from '~utils/colors';
+import {useSocketStore} from '~zustands/useSocketStore';
 
 interface MessageFooterProps {
   targetUser: any;
@@ -18,7 +19,7 @@ interface MessageFooterProps {
 
 const MessageFooter = ({targetUser}: MessageFooterProps) => {
   const {t} = useTranslation();
-  const socket = useAppSelector(state => state.socketReducer.socket);
+  const {appSocket: socket} = useSocketStore();
   const [input, setInput] = useState('');
 
   useEffect(() => {
@@ -39,6 +40,10 @@ const MessageFooter = ({targetUser}: MessageFooterProps) => {
     if (input.trim() !== '') {
       if (!isEmpty(socket)) {
         socket.sendMessage(input, targetUser.conv?.id);
+        UserApi.pushNotification(targetUser.partnerId, {
+          title: targetUser.fullName,
+          body: input,
+        });
         setInput('');
       }
     }
@@ -76,6 +81,7 @@ const MessageFooter = ({targetUser}: MessageFooterProps) => {
         onChangeText={onChangeText}
         placeholder={t('message.placeholder')}
         style={styles.textInput}
+        onFocus={handeUpdateIsSeenMessage}
       />
       <IconButton onPress={handleSendMessage} style={{padding: 10}}>
         <FontAwesomeIcon icon={faPaperPlane} size={20} color={colors.primary} />
