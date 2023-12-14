@@ -1,11 +1,13 @@
 import RNBounceable from '@freakycoder/react-native-bounceable';
 import moment from 'moment';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
+  Alert,
   FlatList,
   Image,
   StyleProp,
   StyleSheet,
+  Text,
   View,
   ViewStyle,
 } from 'react-native';
@@ -17,6 +19,9 @@ import {useSocketStore} from '~zustands/useSocketStore';
 import {useUserInfo} from '~zustands/useUserInfo';
 import {TypingAnimation} from 'react-native-typing-animation';
 import {SocketService} from '~services/Socket.service';
+import ImageView from 'react-native-image-viewing';
+import {width} from '~utils/commons';
+import {useTranslation} from 'react-i18next';
 
 interface MessageFieldProps {
   data: any;
@@ -24,8 +29,14 @@ interface MessageFieldProps {
 }
 
 const MessageField = ({targetUser}: MessageFieldProps) => {
+  const {t} = useTranslation();
   const {userInfo} = useUserInfo();
   const flatlistRef = useRef<FlatList>(null);
+  const [visibleImageView, setVisibleImageView] = useState({
+    visible: false,
+    images: [],
+    index: 0,
+  });
 
   const {
     setConversation,
@@ -42,8 +53,18 @@ const MessageField = ({targetUser}: MessageFieldProps) => {
         console.log(userInfo?.id);
       }
     });
-
-    appSocket?.receiveUpdateIsSeenMessage((res: any) => console.log({res}));
+    appSocket?.receiveDeleteMessage((res: any) => {
+      let messages = displayListMessage;
+      const index = displayListMessage.indexOf(
+        displayListMessage.find(i => i.id === res.messId),
+      );
+      messages[index] = {
+        userDelete: userInfo?.id,
+      };
+      console.log(messages, index);
+      // setConversation(messages);
+    });
+    // appSocket?.receiveUpdateIsSeenMessage((res: any) => console.log({res}));
   }, [appSocket, addMessage]);
 
   useEffect(() => {
@@ -103,6 +124,43 @@ const MessageField = ({targetUser}: MessageFieldProps) => {
       };
     };
 
+    const onRemoveMessage = () => {
+      isSender &&
+        Alert.alert('', t('removeMessageConfirm'), [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {
+            text: 'OK',
+            onPress: () => appSocket?.deleteMessage(item.id, targetUser.id),
+          },
+        ]);
+    };
+
+    const _renderImage = ({item: image, index: idx}: any) => (
+      <>
+        <RNBounceable
+          key={image}
+          onLongPress={onRemoveMessage}
+          onPress={() =>
+            setVisibleImageView({
+              index: idx,
+              visible: true,
+              images: item.message.split(',').map((it: any) => ({
+                uri: it,
+              })),
+            })
+          }>
+          <Image
+            source={{uri: image}}
+            style={[styles.image, idx === 1 && {marginHorizontal: 5}]}
+          />
+        </RNBounceable>
+      </>
+    );
+
     return (
       <View
         style={{
@@ -131,32 +189,71 @@ const MessageField = ({targetUser}: MessageFieldProps) => {
             <View style={{width: 35}} />
           ))}
         <View>
-          <RNBounceable
-            style={[
-              isSender ? styles.messageItem : styles.messageItemSender,
-              checkRenderMessage().style,
-            ]}>
-            {item.isTyping ? (
-              <View style={{width: 30, height: 20}}>
-                <TypingAnimation
-                  dotColor={colors.primary}
-                  dotMargin={5}
-                  dotAmplitude={3}
-                  dotSpeed={0.15}
-                  dotRadius={2.5}
-                  dotX={12}
-                  dotY={6}
+          {!item.isTyping &&
+          (item.message as string).includes('https://res.cloudinary.com') &&
+          !item.userDelete ? (
+            <FlatList
+              numColumns={3}
+              scrollEnabled={false}
+              data={item.message.split(',')}
+              renderItem={_renderImage}
+              style={{
+                borderRadius: 20,
+                overflow: 'hidden',
+              }}
+            />
+          ) : item.userDelete ? (
+            <View
+              style={[
+                checkRenderMessage().style,
+                {
+                  flex: 1,
+                  paddingVertical: 5,
+                  paddingHorizontal: 10,
+                  borderRadius: 8,
+                  borderWidth: 1,
+                  borderColor: colors.black_opacity,
+                },
+              ]}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: colors.black_opacity,
+                  paddingVertical: 5,
+                  paddingHorizontal: 10,
+                }}>
+                Message is removed
+              </Text>
+            </View>
+          ) : (
+            <RNBounceable
+              onLongPress={onRemoveMessage}
+              style={[
+                isSender ? styles.messageItem : styles.messageItemSender,
+                checkRenderMessage().style,
+              ]}>
+              {item.isTyping ? (
+                <View style={{width: 30, height: 20}}>
+                  <TypingAnimation
+                    dotColor={colors.primary}
+                    dotMargin={5}
+                    dotAmplitude={3}
+                    dotSpeed={0.15}
+                    dotRadius={2.5}
+                    dotX={12}
+                    dotY={6}
+                  />
+                </View>
+              ) : (
+                <TitleCustom
+                  title={item.message}
+                  textStyle={
+                    isSender ? styles.messageItem : styles.messageItemSender
+                  }
                 />
-              </View>
-            ) : (
-              <TitleCustom
-                title={item.message}
-                textStyle={
-                  isSender ? styles.messageItem : styles.messageItemSender
-                }
-              />
-            )}
-          </RNBounceable>
+              )}
+            </RNBounceable>
+          )}
           {checkRenderMessage().showTime && (
             <View
               style={{
@@ -173,16 +270,27 @@ const MessageField = ({targetUser}: MessageFieldProps) => {
     );
   };
   return (
-    <FlatList
-      ref={flatlistRef}
-      onContentSizeChange={() =>
-        flatlistRef.current?.scrollToEnd({animated: true})
-      }
-      data={displayListMessage}
-      renderItem={_renderItem}
-      contentContainerStyle={styles.container}
-      style={{backgroundColor: 'brown'}}
-    />
+    <>
+      <FlatList
+        initialNumToRender={10}
+        ref={flatlistRef}
+        onContentSizeChange={() =>
+          flatlistRef.current?.scrollToEnd({animated: true})
+        }
+        data={displayListMessage}
+        renderItem={_renderItem}
+        contentContainerStyle={styles.container}
+      />
+
+      <ImageView
+        images={visibleImageView.images}
+        imageIndex={visibleImageView.index}
+        visible={visibleImageView.visible}
+        onRequestClose={() =>
+          setVisibleImageView({visible: false, images: [], index: 0})
+        }
+      />
+    </>
   );
 };
 
@@ -210,8 +318,16 @@ const styles = StyleSheet.create({
   },
   container: {
     paddingHorizontal: 10,
-    alignContent: 'flex-end',
-    backgroundColor: 'green',
+    justifyContent: 'flex-end',
+    // height: height,
+    width: width,
+    // backgroundColor: colors.error,
+  },
+  image: {
+    height: 100,
+    aspectRatio: 1 / 1,
+    borderRadius: 5,
+    backgroundColor: colors.inactive,
   },
 });
 

@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
-import {FlatList} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {AnimatedContainer} from '~components/AnimatedContainer';
 import {HeaderCustom} from '~components/HeaderCustom';
 import MessageItem from '~components/message/MessageItem';
@@ -65,9 +65,22 @@ const MessageScreen = () => {
         style={{flex: 1}}
         data={data}
         renderItem={_renderItem}
+        ListEmptyComponent={
+          <View style={styles.container}>
+            <Text>{t('empty')}</Text>
+          </View>
+        }
       />
     </AnimatedContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 0.5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default MessageScreen;

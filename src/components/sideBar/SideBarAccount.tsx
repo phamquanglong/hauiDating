@@ -6,12 +6,18 @@ import {colors} from '~utils/colors';
 import {Spacer} from '~components/Spacer';
 import {useNavigation} from '@react-navigation/native';
 import {ROUTE_NAMES} from '~utils/constants';
+import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 
-const SideBarAccount = () => {
+interface SideBarAccountProps {
+  navigation: DrawerNavigationHelpers;
+}
+
+const SideBarAccount = ({navigation}: SideBarAccountProps) => {
   const {userInfo} = useUserInfo();
   const {navigate} = useNavigation();
   const onPress = () => {
     navigate(ROUTE_NAMES.EDITINFOSCREEN as never);
+    navigation.closeDrawer();
   };
 
   return (
@@ -32,22 +38,21 @@ const SideBarAccount = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.black_opacity,
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    marginStart: 20,
-    borderTopLeftRadius: 100,
-    borderBottomLeftRadius: 100,
+    borderBottomWidth: 0.5,
+    borderBottomColor: colors.inactive,
+    marginHorizontal: 10,
   },
   avatar: {width: 60, aspectRatio: 1 / 1, borderRadius: 100},
   userName: {
-    color: colors.text.white,
+    color: colors.text.black,
     fontWeight: 'bold',
     fontSize: 24,
   },
   email: {
-    color: colors.inactive,
+    color: colors.black_opacity,
   },
 });
 

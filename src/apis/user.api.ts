@@ -11,7 +11,10 @@ export default class UserApi {
     return ApiService.get('users/me');
   }
 
-  static pushNotification(id: any, body: {title: string; body: string}) {
+  static pushNotification(
+    id: any,
+    body: {title: string; body: string; targetUser: any},
+  ) {
     return ApiService.post(`users/noti/${id}`, body);
   }
 

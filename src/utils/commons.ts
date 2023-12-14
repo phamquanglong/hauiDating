@@ -5,6 +5,7 @@ import {Position} from '~zustands/useHomeStore';
 import {Dimensions, ViewStyle} from 'react-native';
 import moment from 'moment';
 import notifee from '@notifee/react-native';
+import {mediaDevices} from 'react-native-webrtc';
 
 export const width = Dimensions.get('window').width;
 export const height = Dimensions.get('window').height;
@@ -155,3 +156,35 @@ export async function onDisplayNotification(title: string, body: string) {
     },
   });
 }
+
+export const getStream = async () => {
+  let isFront = true;
+  const sourcesInfos: any[] = (await mediaDevices.enumerateDevices()) as any[];
+  console.log(sourcesInfos);
+  let videoSourceId;
+  for (let i = 0; i < sourcesInfos.length; i++) {
+    const sourcesInfo = sourcesInfos[i];
+    if (
+      sourcesInfo.kind == 'videoinput' &&
+      sourcesInfo.facing == (isFront ? 'front' : 'environment')
+    ) {
+      videoSourceId = sourcesInfo.deviceId;
+    }
+  }
+
+  const stream = await mediaDevices.getUserMedia({
+    audio: true,
+    video: {
+      width: 640,
+      height: 480,
+      frameRate: 30,
+      facingMode: isFront ? 'user' : 'environment',
+      deviceId: videoSourceId,
+    },
+  });
+
+  if (typeof stream !== 'boolean') {
+    return stream;
+  }
+  return null;
+};

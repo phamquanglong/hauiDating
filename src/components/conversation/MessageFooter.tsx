@@ -7,9 +7,17 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {isEmpty} from 'lodash';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {StyleSheet, TextInput, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
 import UserApi from '~apis/user.api';
 import {IconButton} from '~components/IconButton';
+import ImageItem from '~components/edit-info/ImageItem';
+import useImagePicker from '~hooks/useImagePicker';
 import {colors} from '~utils/colors';
 import {useSocketStore} from '~zustands/useSocketStore';
 
@@ -21,6 +29,13 @@ const MessageFooter = ({targetUser}: MessageFooterProps) => {
   const {t} = useTranslation();
   const {appSocket: socket} = useSocketStore();
   const [input, setInput] = useState('');
+  const [images, setImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const {onLaunchCamera, onLaunchLibrary} = useImagePicker(
+    5,
+    setIsLoading,
+    setImages,
+  );
 
   useEffect(() => {
     if (!isEmpty(socket)) {
@@ -40,13 +55,20 @@ const MessageFooter = ({targetUser}: MessageFooterProps) => {
     if (input.trim() !== '') {
       if (!isEmpty(socket)) {
         socket.sendMessage(input, targetUser.conv?.id);
-        UserApi.pushNotification(targetUser.partnerId, {
-          title: targetUser.fullName,
-          body: input,
-        });
         setInput('');
       }
     }
+    if (images.length > 0) {
+      if (!isEmpty(socket)) {
+        socket.sendMessage(images.toString(), targetUser.conv?.id);
+        setImages([]);
+      }
+    }
+    UserApi.pushNotification(targetUser.partnerId, {
+      title: targetUser.fullName,
+      body: images.length > 0 && input.length === 0 ? images.toString() : input,
+      targetUser: JSON.stringify(targetUser),
+    });
   };
 
   const handeUpdateIsSeenMessage = () => {
@@ -59,33 +81,55 @@ const MessageFooter = ({targetUser}: MessageFooterProps) => {
     setInput(value);
   };
 
-  const onTakePhoto = () => {};
+  const _renderImage = ({item}: any) => (
+    <ImageItem
+      image={item}
+      onRemove={() => setImages(prv => prv.filter(i => i !== item))}
+    />
+  );
+
   return (
-    <View style={styles.container}>
-      <IconButton onPress={onTakePhoto} style={styles.button}>
-        <FontAwesomeIcon
-          icon={faCamera}
-          size={25}
-          color={colors.black_opacity}
+    <View>
+      <View style={styles.container}>
+        <IconButton onPress={onLaunchCamera} style={styles.button}>
+          <FontAwesomeIcon
+            icon={faCamera}
+            size={25}
+            color={colors.black_opacity}
+          />
+        </IconButton>
+        <IconButton onPress={onLaunchLibrary} style={styles.button}>
+          <FontAwesomeIcon
+            icon={faImages}
+            size={25}
+            color={colors.black_opacity}
+          />
+        </IconButton>
+        <TextInput
+          value={input}
+          onChangeText={onChangeText}
+          placeholder={t('message.placeholder')}
+          style={styles.textInput}
+          onFocus={handeUpdateIsSeenMessage}
         />
-      </IconButton>
-      <IconButton onPress={onTakePhoto} style={styles.button}>
-        <FontAwesomeIcon
-          icon={faImages}
-          size={25}
-          color={colors.black_opacity}
+        <IconButton onPress={handleSendMessage} style={{padding: 10}}>
+          <FontAwesomeIcon
+            icon={faPaperPlane}
+            size={20}
+            color={colors.primary}
+          />
+        </IconButton>
+      </View>
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <FlatList
+          numColumns={3}
+          data={images}
+          renderItem={_renderImage}
+          columnWrapperStyle={{justifyContent: 'space-evenly'}}
         />
-      </IconButton>
-      <TextInput
-        value={input}
-        onChangeText={onChangeText}
-        placeholder={t('message.placeholder')}
-        style={styles.textInput}
-        onFocus={handeUpdateIsSeenMessage}
-      />
-      <IconButton onPress={handleSendMessage} style={{padding: 10}}>
-        <FontAwesomeIcon icon={faPaperPlane} size={20} color={colors.primary} />
-      </IconButton>
+      )}
     </View>
   );
 };

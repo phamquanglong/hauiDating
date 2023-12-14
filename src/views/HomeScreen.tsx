@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {AnimatedContainer} from '~components/AnimatedContainer';
 import useHomeScreenController from '~hooks/useHomeScreenController';
 import {colors} from '~utils/colors';
-import {faBars, faQrcode} from '@fortawesome/free-solid-svg-icons';
+import {faBars, faHeart, faQrcode} from '@fortawesome/free-solid-svg-icons';
 import {IconButton} from '~components/IconButton';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {TitleCustom} from '~components/TitleCustom';
@@ -13,6 +13,7 @@ import StackCard from '~components/card/StackCard';
 import {IUser} from '~apis/User';
 import AppLoading from '~components/AppLoading';
 import {ROUTE_NAMES} from '~utils/constants';
+import {Spacer} from '~components/Spacer';
 
 const HomeScreen = () => {
   const {suggestUsers, loading} = useHomeScreenController();
@@ -47,7 +48,9 @@ const HomeScreen = () => {
           <IconButton onPress={onMenu} style={{flex: 0.1}}>
             <FontAwesomeIcon icon={faBars} size={30} color={colors.white} />
           </IconButton>
-          <View style={styles.flex_1}>
+          <View style={styles.appName}>
+            <FontAwesomeIcon icon={faHeart} size={25} color={colors.white} />
+            <Spacer horizontal value={5} />
             <TitleCustom
               title={'hauiDating'}
               textStyle={{
@@ -83,6 +86,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     paddingHorizontal: 20,
+    marginBottom: 20,
   },
   flex_1: {
     flex: 1,
@@ -102,6 +106,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     borderRadius: 10,
+  },
+  appName: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
   },
 });
 

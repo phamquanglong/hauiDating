@@ -1,6 +1,5 @@
-import {faCheckCircle, faChevronLeft} from '@fortawesome/free-solid-svg-icons';
+import {faCheckCircle} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
@@ -13,9 +12,8 @@ import {
 import {useToast} from 'react-native-toast-notifications';
 import UserApi from '~apis/user.api';
 import AppLoading from '~components/AppLoading';
-import ButtonPrimary from '~components/ButtonPrimary';
-import {IconButton} from '~components/IconButton';
 import {Spacer} from '~components/Spacer';
+import StackHeader from '~components/StackHeader';
 import {TitleCustom} from '~components/TitleCustom';
 import ImageItem from '~components/edit-info/ImageItem';
 import BasicInfo from '~components/setupProfile/BasicInfo';
@@ -30,7 +28,6 @@ const EditInfoScreen = () => {
   const {editInfo, setEditInfo} = useEditInfoStore();
   const {loading} = useLoading();
   const {t} = useTranslation();
-  const {goBack} = useNavigation();
   const toast = useToast();
 
   useEffect(() => {
@@ -68,8 +65,7 @@ const EditInfoScreen = () => {
         settings: editInfo?.settings,
         hobbies: [0, 23, 10],
       })
-        .then(res => {
-          console.log({res});
+        .then(() => {
           toast.show(t('editInfo.success'), {
             type: 'success',
             successIcon: (
@@ -83,25 +79,14 @@ const EditInfoScreen = () => {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
-      <View style={styles.header}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <IconButton style={styles.backButton} onPress={goBack}>
-            <FontAwesomeIcon icon={faChevronLeft} />
-          </IconButton>
-          <TitleCustom
-            title={t('editInfo.title')}
-            textStyle={styles.titleHeader}
-          />
-        </View>
-        <ButtonPrimary
-          onPress={onSave}
-          text={t('save')}
-          textStyle={{color: colors.primary, fontWeight: 'bold', fontSize: 16}}
-          style={{padding: 10, paddingHorizontal: 20}}
-        />
-      </View>
+      <StackHeader
+        title={t('editInfo.title')}
+        textRightButton={t('save')}
+        onPressRightButton={onSave}
+      />
       <ScrollView>
         <FlatList
+          scrollEnabled={false}
           style={{height: 'auto'}}
           contentContainerStyle={{
             paddingVertical: 10,

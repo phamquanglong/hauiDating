@@ -17,90 +17,25 @@ import {
 } from 'react-native';
 import {Spacer} from '~components/Spacer';
 import {colors} from '~utils/colors';
-import {
-  ImagePickerResponse,
-  launchCamera,
-  launchImageLibrary,
-} from 'react-native-image-picker';
 import {useSetupProfile} from '~zustands/useSetupProfile';
 import Carousel from 'react-native-snap-carousel';
 import {width} from '~utils/commons';
 import {IconButton} from '~components/IconButton';
 import {useAnimated} from '~hooks/useAnimated';
-import UserApi from '~apis/user.api';
-import {useEditInfoStore} from '~zustands/useEditInfoStore';
 import AppLoading from '~components/AppLoading';
-import {useLoading} from '~zustands/useLoading';
+import useImagePicker from '~hooks/useImagePicker';
 
 interface PickImageProps {
   multi?: number;
   onHideGlobalModal?: () => void;
 }
 
-const PickImage = ({multi = 6, onHideGlobalModal}: PickImageProps) => {
+const PickImage = ({multi = 6}: PickImageProps) => {
   const {t} = useTranslation();
   const {setupProfile, setSetupProfile} = useSetupProfile();
-  const {editInfo, setEditInfo} = useEditInfoStore();
   const [loading, setLoading] = useState(false);
   const {transformValue} = useAnimated();
-  const {setLoading: setGlobalLoading} = useLoading();
-
-  const uploadImages = (res: ImagePickerResponse) => {
-    if (res.didCancel) {
-      return;
-    }
-    setLoading(true);
-    multi === 1 && setGlobalLoading(true);
-    onHideGlobalModal?.();
-    const promises = res.assets?.map(async i => {
-      const imageData = {
-        uri: i.uri,
-        name: i.fileName,
-        type: i.type,
-      };
-      return UserApi.uploadImage(imageData);
-    });
-    promises &&
-      Promise.allSettled(promises).then(response => {
-        let arr: string[] | undefined =
-          multi === 1 ? editInfo?.images : setupProfile?.image;
-        response.forEach(i => arr && arr.push(i?.value?.data.secure_url ?? ''));
-        setLoading(false);
-        multi === 1 && setGlobalLoading(false);
-        if (multi === 1) {
-          setEditInfo({
-            ...editInfo,
-            images: arr,
-          });
-          return;
-        }
-        setSetupProfile({
-          ...setupProfile,
-          image: arr,
-        });
-      });
-  };
-
-  const onLaunchCamera = () => {
-    launchCamera(
-      {
-        mediaType: 'photo',
-        durationLimit: multi,
-      },
-      res => uploadImages(res),
-    );
-  };
-
-  const onLaunchLibrary = () => {
-    launchImageLibrary(
-      {
-        mediaType: 'photo',
-        selectionLimit: multi,
-        quality: 0.1,
-      },
-      res => uploadImages(res),
-    );
-  };
+  const {onLaunchCamera, onLaunchLibrary} = useImagePicker(multi, setLoading);
 
   const imageList = () => {
     const removeImage = (item: string) => () => {

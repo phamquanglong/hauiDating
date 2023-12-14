@@ -1,6 +1,7 @@
 export const colors = {
   primary: '#ff4d4e',
   bg_yellow: '#e4e4a3',
+  bg_light_gray: '#f5f5f5',
   inactive: '#e6e6e6',
   success: '#00674a',
   black: '#000',

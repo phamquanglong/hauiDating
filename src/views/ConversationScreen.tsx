@@ -9,6 +9,7 @@ import {height} from '~utils/commons';
 
 export interface ConversationScreenParams {
   targetUser: any;
+  isNavFromNoti?: boolean;
 }
 
 const ConversationScreen = ({route}: any) => {
@@ -17,7 +18,10 @@ const ConversationScreen = ({route}: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderConversation targetUser={params.targetUser} />
+      <HeaderConversation
+        targetUser={params.targetUser}
+        isNavFromNoti={params.isNavFromNoti}
+      />
       <MessageField data={data} targetUser={params.targetUser} />
       <MessageFooter targetUser={params.targetUser} />
       <KeyboardSpacer />

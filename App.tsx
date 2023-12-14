@@ -6,7 +6,7 @@
  */
 
 import React, {useCallback, useEffect} from 'react';
-import {Alert, StatusBar} from 'react-native';
+import {StatusBar} from 'react-native';
 
 import MainNavigation from './src/routers/MainNavigation';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -18,6 +18,9 @@ import {useLocalStorage} from '~hooks/useLocalStorage';
 import {ToastProvider} from 'react-native-toast-notifications';
 import notifee, {AuthorizationStatus} from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
+import SplashScreen from 'react-native-splash-screen';
+import {NotifierWrapper} from 'react-native-notifier';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 // LogBox.ignoreAllLogs();
 
@@ -30,11 +33,17 @@ const RNfirebaseConfig: ReactNativeFirebase.FirebaseAppOptions = {
   storageBucket: '',
 };
 
-firebase.initializeApp(RNfirebaseConfig);
+if (firebase.apps === null) {
+  firebase.initializeApp(RNfirebaseConfig);
+}
+
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log('Message handled in the background!', remoteMessage);
+});
 
 function App(): JSX.Element {
   useKeepAwake();
-  const {requestUserPermission, getToken} = usePushNotification();
+  const {requestUserPermission} = usePushNotification();
 
   async function requestPermission() {
     const settings = await notifee.requestPermission();
@@ -47,11 +56,11 @@ function App(): JSX.Element {
   }
 
   const startApp = useCallback(async () => {
+    SplashScreen.hide();
     await requestPermission();
     requestUserPermission();
-    getToken();
     StatusBar.setBarStyle('light-content', true);
-  }, [getToken, requestUserPermission]);
+  }, [requestUserPermission]);
 
   useEffect(() => {
     startApp();
@@ -59,19 +68,15 @@ function App(): JSX.Element {
 
   useLocalStorage();
 
-  useEffect(() => {
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-    });
-
-    return unsubscribe;
-  }, []);
-
   return (
     <SafeAreaProvider>
-      <ToastProvider>
-        <MainNavigation />
-      </ToastProvider>
+      <GestureHandlerRootView style={{flex: 1}}>
+        <NotifierWrapper>
+          <ToastProvider>
+            <MainNavigation />
+          </ToastProvider>
+        </NotifierWrapper>
+      </GestureHandlerRootView>
     </SafeAreaProvider>
   );
 }

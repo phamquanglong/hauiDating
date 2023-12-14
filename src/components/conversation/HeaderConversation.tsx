@@ -10,29 +10,45 @@ import {ROUTE_NAMES} from '~utils/constants';
 
 interface HeaderConversationProps {
   targetUser: any;
+  isNavFromNoti?: boolean;
 }
 
-const HeaderConversation = ({targetUser}: HeaderConversationProps) => {
+const HeaderConversation = ({
+  targetUser,
+  isNavFromNoti,
+}: HeaderConversationProps) => {
   const {goBack, navigate} = useNavigation();
 
   const onPress = () => {
     navigate(ROUTE_NAMES.USERDETAIL as never, {
       id: targetUser.partnerId,
+      action: 'abc',
     });
+  };
+
+  const onCall = () => {
+    navigate(ROUTE_NAMES.VIDEOCALLSCREEN as never);
+  };
+
+  const onGoBack = () => {
+    goBack();
+    if (isNavFromNoti) {
+      navigate(ROUTE_NAMES.MESSAGE as never);
+    }
   };
 
   return (
     <View style={styles.headerContainer}>
       <View style={styles.avatarContainer}>
-        <IconButton onPress={goBack} style={{padding: 10}}>
+        <IconButton onPress={onGoBack} style={{padding: 10}}>
           <FontAwesomeIcon icon={faChevronLeft} size={25} />
         </IconButton>
         <TouchableOpacity style={styles.container} onPress={onPress}>
-          <Image source={{uri: targetUser.avatar}} style={styles.avatar} />
-          <TitleCustom title={targetUser.fullName} textStyle={styles.name} />
+          <Image source={{uri: targetUser?.avatar}} style={styles.avatar} />
+          <TitleCustom title={targetUser?.fullName} textStyle={styles.name} />
         </TouchableOpacity>
       </View>
-      <IconButton onPress={goBack} style={{padding: 10}}>
+      <IconButton onPress={onCall} style={{padding: 10}}>
         <FontAwesomeIcon
           icon={faFlagUsa}
           size={25}

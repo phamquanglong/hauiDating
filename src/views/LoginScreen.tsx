@@ -12,6 +12,7 @@ import {storage} from '~services/localStorage';
 import {colors} from '~utils/colors';
 import {ROUTE_NAMES} from '~utils/constants';
 import {images} from '~utils/images';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 const LoginScreen = () => {
   const {t} = useTranslation();
@@ -110,6 +111,7 @@ const LoginScreen = () => {
           textStyle={{color: colors.text.white}}
         />
       </View>
+      <KeyboardSpacer />
     </ImageBackground>
   );
 };

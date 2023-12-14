@@ -11,6 +11,8 @@ import {HomeDrawer} from './HomeDrawer';
 import {storage} from '~services/localStorage';
 import SetupProfile from '~views/SetupProfile';
 import UserDetail from '~views/UserDetail';
+import VideoCallScreen from '~views/VideoCallScreen';
+import EditInfoScreen from '~views/EditInfoScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -53,6 +55,14 @@ const MainStackNavigator = () => {
       <Stack.Screen name={ROUTE_NAMES.HOMEDRAWER} component={HomeDrawer} />
       <Stack.Screen name={ROUTE_NAMES.SETUPPROFILE} component={SetupProfile} />
       <Stack.Screen name={ROUTE_NAMES.USERDETAIL} component={UserDetail} />
+      <Stack.Screen
+        name={ROUTE_NAMES.VIDEOCALLSCREEN}
+        component={VideoCallScreen}
+      />
+      <Stack.Screen
+        name={ROUTE_NAMES.EDITINFOSCREEN}
+        component={EditInfoScreen}
+      />
     </Stack.Navigator>
   );
 };

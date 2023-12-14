@@ -96,5 +96,12 @@
   "editInfo": {
     "title": "Chỉnh sửa thông tin",
     "success": "Chỉnh sửa thông tin thành công!"
-  }
+  },
+  "letScanQrcode": "Hãy quét mã qr để tìm kiếm một nửa của mình một cách nhanh chóng nhé!",
+  "qrcode": "QR Code",
+  "myQrcode": "Mã QR của tôi",
+  "scanQrcode": "Quét mã QR",
+  "logoutConfirm": "Bạn có chắc muốn đăng xuất tài khoản {{account}} không?",
+  "empty": "Không có dữ liệu nào",
+  "removeMessageConfirm": "Bạn có chắc muốn xóa tin nhắn này không?"
 }

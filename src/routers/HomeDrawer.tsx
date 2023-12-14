@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {SideBarCustom} from '~components/sideBar/SideBarCustom';
 import {HomeStack} from './HomeStack';
 import {SettingsStack} from './SettingsStack';
@@ -9,8 +9,10 @@ import {
 import {ROUTE_NAMES} from '~utils/constants';
 import {HistoryStack} from './HistoryStack';
 import {MessageStack} from './MessageStack';
-import EditInfoScreen from '~views/EditInfoScreen';
 import {useHandleNoti} from '~hooks/useHandleNoti';
+import {useSocketStore} from '~zustands/useSocketStore';
+import {SocketService} from '~services/Socket.service';
+import {usePushNotification} from '~hooks/usePushNotification';
 
 const Drawer = createDrawerNavigator();
 
@@ -20,6 +22,19 @@ const screenOptions: DrawerNavigationOptions = {
 
 export const HomeDrawer = () => {
   useHandleNoti();
+
+  const {setListUserOnline, setSocket} = useSocketStore();
+  const {getToken} = usePushNotification();
+
+  useEffect(() => {
+    const appSocket = new SocketService();
+    appSocket.connect();
+    setSocket(appSocket);
+    getToken();
+    appSocket.receiveListUserOnline((data: any) => {
+      setListUserOnline(data);
+    });
+  }, []);
 
   return (
     <Drawer.Navigator
@@ -32,10 +47,6 @@ export const HomeDrawer = () => {
       />
       <Drawer.Screen name={ROUTE_NAMES.HISTORYSTACK} component={HistoryStack} />
       <Drawer.Screen name={ROUTE_NAMES.MESSAGESTACK} component={MessageStack} />
-      <Drawer.Screen
-        name={ROUTE_NAMES.EDITINFOSCREEN}
-        component={EditInfoScreen}
-      />
     </Drawer.Navigator>
   );
 };

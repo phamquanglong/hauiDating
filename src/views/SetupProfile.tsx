@@ -147,7 +147,7 @@ const SetupProfile = () => {
       case 3:
         return <SettingsProfile />;
       default:
-        return <BasicInfo />;
+        return <BasicInfo isAvoidKeyboard />;
     }
   };
 

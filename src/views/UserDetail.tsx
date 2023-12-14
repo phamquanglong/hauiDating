@@ -107,7 +107,6 @@ const UserDetail = ({route}: any) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useLayoutEffect(() => {
-    console.log('id', route.params.id);
     if (route.params.id) {
       UserApi.getInfoById(route.params.id).then(res => setItemUser(res.data));
     }
@@ -184,7 +183,7 @@ const styles = StyleSheet.create({
   },
   image: {
     aspectRatio: 2 / 3,
-    width: '100%',
+    width: width,
     flexDirection: 'row',
     backgroundColor: colors.inactive,
   },

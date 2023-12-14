@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import {colors} from '~utils/colors';
 import {SideBarItemList} from '~components/sideBar/SideBarItemList';
 import ButtonPrimary from '~components/ButtonPrimary';
@@ -10,11 +10,14 @@ import {useServiceZustands} from '~zustands/index';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import {ROUTE_NAMES} from '~utils/constants';
 import SideBarAccount from './SideBarAccount';
+import {DrawerContentComponentProps} from '@react-navigation/drawer';
+import {useUserInfo} from '~zustands/useUserInfo';
 
-export const SideBarCustom = () => {
+export const SideBarCustom = (props: DrawerContentComponentProps) => {
   const {t} = useTranslation();
   const {dispatch} = useNavigation();
   const {clearAll} = useServiceZustands();
+  const {userInfo} = useUserInfo();
 
   const onLogout = () => {
     storage.set('accessToken', '');
@@ -23,12 +26,30 @@ export const SideBarCustom = () => {
     dispatch(StackActions.replace(ROUTE_NAMES.LOGIN));
   };
 
+  const alertLogout = () => {
+    Alert.alert('', t('logoutConfirm', {account: userInfo?.userName}), [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'OK',
+        onPress: onLogout,
+      },
+    ]);
+  };
+
   return (
     <View style={styles.container}>
-      <SideBarAccount />
-      <SideBarItemList />
+      <SideBarAccount navigation={props.navigation} />
+      <SideBarItemList
+        navigation={props.navigation}
+        state={props.state}
+        descriptors={props.descriptors}
+      />
       <ButtonPrimary
-        onPress={onLogout}
+        onPress={alertLogout}
         text={t('logout')}
         iconRight={faRightFromBracket}
         textStyle={{color: colors.primary, fontSize: 16}}
@@ -47,7 +68,7 @@ export const SideBarCustom = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.white,
     paddingVertical: 50,
   },
 });

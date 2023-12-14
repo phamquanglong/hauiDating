@@ -11,10 +11,20 @@ import useGlobalModalController from '~hooks/useGlobalModalController';
 import {Position} from '~zustands/useHomeStore';
 import {useEditInfoStore} from '~zustands/useEditInfoStore';
 
-const ImageItem = ({image}: {image: string}) => {
+const ImageItem = ({
+  image,
+  onRemove,
+}: {
+  image: string;
+  onRemove?: () => void;
+}) => {
   const {onShowGlobalModal, onHideGlobalModal} = useGlobalModalController();
   const {editInfo, setEditInfo} = useEditInfoStore();
   const onPress = () => {
+    if (onRemove) {
+      onRemove();
+      return;
+    }
     if (image) {
       setEditInfo({
         ...editInfo,
@@ -36,7 +46,26 @@ const ImageItem = ({image}: {image: string}) => {
 
   return (
     <RNBounceable style={styles.container} onPress={onPress}>
-      <Image source={{uri: image ?? 'gg'}} style={styles.image} />
+      {image ? (
+        <Image
+          source={{uri: image}}
+          style={[
+            styles.image,
+            {
+              borderColor: colors.inactive,
+            },
+          ]}
+        />
+      ) : (
+        <View
+          style={[
+            styles.image,
+            {
+              borderStyle: 'dashed',
+            },
+          ]}
+        />
+      )}
       <IconButton
         onPress={onPress}
         style={[
@@ -63,7 +92,6 @@ const styles = StyleSheet.create({
     width: width * 0.26,
     aspectRatio: 3 / 4,
     borderRadius: 10,
-    borderStyle: 'dashed',
     borderWidth: 1.5,
     margin: 2,
   },

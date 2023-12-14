@@ -96,5 +96,12 @@
   "editInfo": {
     "title": "Edit info",
     "success": "Update info successfully!"
-  }
+  },
+  "letScanQrcode": "Let's scan qrcode to find your lover quickly!",
+  "qrcode": "QR Code",
+  "myQrcode": "My QR code",
+  "scanQrcode": "Scan QR code",
+  "logoutConfirm": "Are you sure you want to sign out of {{account}} account?",
+  "empty": "No data",
+  "removeMessageConfirm": "Are you sure you want to remove this message?"
 }

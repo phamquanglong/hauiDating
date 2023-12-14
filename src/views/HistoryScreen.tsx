@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {HeaderCustom} from '~components/HeaderCustom';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
@@ -10,37 +10,40 @@ import {getStatusBarColor} from '~utils/commons';
 import {useFocusEffect} from '@react-navigation/native';
 import UserActionsApi from '~apis/user-actions.api';
 import {useHistoryStore} from '~zustands/useHistoryStore';
+import AppLoading from '~components/AppLoading';
 
 const Tab = createMaterialTopTabNavigator();
 
 const HistoryTabs = () => {
   const {t} = useTranslation();
+  const [loading, setLoading] = useState(true);
   const {setLikedList, setDislikedList, setLikedMeList} = useHistoryStore();
 
   useFocusEffect(
     React.useCallback(() => {
-      UserActionsApi.getHistory(ActionTypes.LIKED).then(res => {
-        let arr: any[] = res.data;
-        if (res.data.length % 2 == 1) {
-          arr.push(undefined);
-        }
-        setLikedList(arr);
-      });
+      const liked = UserActionsApi.getHistory(ActionTypes.LIKED);
+      const disliked = UserActionsApi.getHistory(ActionTypes.DISLIKED);
+      const likedme = UserActionsApi.getHistory(ActionTypes.LIKEDME);
 
-      UserActionsApi.getHistory(ActionTypes.DISLIKED).then(res => {
-        let arr: any[] = res.data;
-        if (res.data.length % 2 == 1) {
-          arr.push(undefined);
-        }
-        setDislikedList(arr);
-      });
-
-      UserActionsApi.getHistory(ActionTypes.LIKEDME).then(res => {
-        let arr: any[] = res.data;
-        if (res.data.length % 2 == 1) {
-          arr.push(undefined);
-        }
-        setLikedMeList(arr);
+      Promise.allSettled([liked, disliked, likedme]).then(res => {
+        res.forEach((item, index) => {
+          let arr: any[] = item.value.data;
+          if (item.value.data.length % 2 == 1) {
+            arr.push(undefined);
+          }
+          switch (index) {
+            case 0:
+              setLikedList(arr);
+              break;
+            case 1:
+              setDislikedList(arr);
+              break;
+            default:
+              setLikedMeList(arr);
+              break;
+          }
+        });
+        setLoading(false);
       });
     }, []),
   );
@@ -65,6 +68,7 @@ const HistoryTabs = () => {
         <Tab.Screen name={t('disliked')} component={DislikedTab} />
         <Tab.Screen name={t('liked-me')} component={DislikedTab} />
       </Tab.Navigator>
+      {loading && <AppLoading />}
     </>
   );
 };

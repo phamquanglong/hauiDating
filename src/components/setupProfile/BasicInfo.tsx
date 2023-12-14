@@ -8,19 +8,19 @@ import Gender from './Gender';
 import BirthdayPicker from './BirthdayPicker';
 import AboutMe from './AboutMe';
 import {useAnimated} from '~hooks/useAnimated';
-import {useKeyboardListener} from '~hooks/useKeyboardListener';
 import {SetupProfileType, useSetupProfile} from '~zustands/useSetupProfile';
 import {EditInfoType, useEditInfoStore} from '~zustands/useEditInfoStore';
 import {validateEmail} from '~utils/commons';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 interface BasicInfoProps {
   data?: EditInfoType | null;
+  isAvoidKeyboard?: boolean;
 }
 
-const BasicInfo = ({data}: BasicInfoProps) => {
+const BasicInfo = ({data, isAvoidKeyboard}: BasicInfoProps) => {
   const {t} = useTranslation();
   const {transformValue} = useAnimated();
-  const {isKeyboardVisible, keyboardHeight} = useKeyboardListener();
   const {setSetupProfile, setupProfile} = useSetupProfile();
   const {editInfo, setEditInfo} = useEditInfoStore();
   const {fullName} = data?.profile ?? (setupProfile as SetupProfileType);
@@ -75,7 +75,6 @@ const BasicInfo = ({data}: BasicInfoProps) => {
         styles.container,
         {
           transform: [{translateY: transformValue}],
-          height: isKeyboardVisible ? keyboardHeight : 'auto',
         },
       ]}
       showsVerticalScrollIndicator={false}>
@@ -122,6 +121,7 @@ const BasicInfo = ({data}: BasicInfoProps) => {
       <Gender gender={data?.profile?.gender} />
       <BirthdayPicker date={data?.profile?.birthday} />
       <AboutMe bio={data?.profile?.bio} />
+      {isAvoidKeyboard && <KeyboardSpacer />}
     </Animated.ScrollView>
   );
 };

@@ -14,6 +14,7 @@ ApiService.interceptors.response.use(
     return response;
   },
   function (error) {
+    console.log('err', error);
     if (get(error, 'response.status') === 400) {
       const data = get(error, 'response.data');
       if (data) {
@@ -23,7 +24,7 @@ ApiService.interceptors.response.use(
       }
     } else if (get(error, 'response.status') === 401) {
       Alert.alert('Phiên làm việc hết hạn. Vui lòng làm mới ứng dụng');
-      window.location.href = '/login';
+      // window.location.href = '/login';
     } else if (get(error, 'response.status') >= 500) {
       Alert.alert('Máy chủ gặp sự cố. Vui lòng thử lại sau');
     }

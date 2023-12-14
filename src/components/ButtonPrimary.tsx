@@ -43,7 +43,7 @@ const ButtonPrimary = (props: ButtonPrimaryProps) => {
       )}
       <Text style={textStyle}>{text}</Text>
       {iconRight && (
-        <FontAwesomeIcon icon={iconRight} size={15} color={colors.black} />
+        <FontAwesomeIcon icon={iconRight} size={15} color={colors.error} />
       )}
     </RNBounceable>
   );
