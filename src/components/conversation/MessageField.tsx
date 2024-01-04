@@ -49,23 +49,25 @@ const MessageField = ({targetUser}: MessageFieldProps) => {
   useEffect(() => {
     (appSocket as SocketService).receiveMessage((res: any) => {
       addMessage(res);
-      if (res.sender.id !== userInfo?.id) {
-        console.log(userInfo?.id);
-      }
-    });
-    appSocket?.receiveDeleteMessage((res: any) => {
-      let messages = displayListMessage;
-      const index = displayListMessage.indexOf(
-        displayListMessage.find(i => i.id === res.messId),
-      );
-      messages[index] = {
-        userDelete: userInfo?.id,
-      };
-      console.log(messages, index);
-      // setConversation(messages);
+      return;
     });
     // appSocket?.receiveUpdateIsSeenMessage((res: any) => console.log({res}));
   }, [appSocket, addMessage]);
+
+  useEffect(() => {
+    appSocket?.receiveDeleteMessage((res: any) => {
+      let messages = [...displayListMessage];
+      const mess = messages.find(i => i.id === res.messId);
+      const index = messages.indexOf(mess);
+      messages[index] = {
+        ...mess,
+        userDelete: userInfo?.id,
+      };
+      if (displayListMessage.length > 0) {
+        setConversation(messages);
+      }
+    });
+  }, [displayListMessage, appSocket]);
 
   useEffect(() => {
     MessagesApi.getAllMessageOfConversation(targetUser.id).then(res => {
@@ -128,12 +130,12 @@ const MessageField = ({targetUser}: MessageFieldProps) => {
       isSender &&
         Alert.alert('', t('removeMessageConfirm'), [
           {
-            text: 'Cancel',
+            text: t('cancel'),
             onPress: () => console.log('Cancel Pressed'),
             style: 'cancel',
           },
           {
-            text: 'OK',
+            text: t('ok'),
             onPress: () => appSocket?.deleteMessage(item.id, targetUser.id),
           },
         ]);
@@ -222,7 +224,7 @@ const MessageField = ({targetUser}: MessageFieldProps) => {
                   paddingVertical: 5,
                   paddingHorizontal: 10,
                 }}>
-                Message is removed
+                {t('messageIsRemoved')}
               </Text>
             </View>
           ) : (

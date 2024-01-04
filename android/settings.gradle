@@ -1,7 +1,8 @@
 rootProject.name = 'Haui Dating'
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
-include ':app', ':react-native-i18n'
+include ':app'
 includeBuild('../node_modules/@react-native/gradle-plugin')
-project(':react-native-i18n').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-i18n/android')
 include ':react-native-splash-screen'   
 project(':react-native-splash-screen').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-splash-screen/android')
+include ':rangeseekbar'
+project(':rangeseekbar').projectDir = new File(rootProject.projectDir, '../node_modules/@jesster2k10/react-native-range-slider/android/crystalrangeseekbar')

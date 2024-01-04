@@ -1,12 +1,24 @@
-import {faChevronLeft, faFlagUsa} from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronLeft,
+  faFlagUsa,
+  faVideoCamera,
+  faXmarkCircle,
+} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
+import {Alert, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import ConversationApi from '~apis/conversation.api';
 import {IconButton} from '~components/IconButton';
+import ReportModal from '~components/ReportModal';
 import {TitleCustom} from '~components/TitleCustom';
+import useGlobalModalController from '~hooks/useGlobalModalController';
+import {replace} from '~services/Navigation.service';
 import {colors} from '~utils/colors';
 import {ROUTE_NAMES} from '~utils/constants';
+import {Position} from '~zustands/useHomeStore';
+import {useSocketStore} from '~zustands/useSocketStore';
 
 interface HeaderConversationProps {
   targetUser: any;
@@ -17,7 +29,9 @@ const HeaderConversation = ({
   targetUser,
   isNavFromNoti,
 }: HeaderConversationProps) => {
+  const {t} = useTranslation();
   const {goBack, navigate} = useNavigation();
+  const {appSocket, setListConversation} = useSocketStore();
 
   const onPress = () => {
     navigate(ROUTE_NAMES.USERDETAIL as never, {
@@ -27,14 +41,61 @@ const HeaderConversation = ({
   };
 
   const onCall = () => {
-    navigate(ROUTE_NAMES.VIDEOCALLSCREEN as never);
+    navigate(ROUTE_NAMES.VIDEOCALLSCREEN as never, {
+      targetUser: targetUser,
+    });
+  };
+
+  const onUnmatch = () => {
+    Alert.alert('', t('unmatchConfirm', {user: targetUser?.fullName}), [
+      {
+        text: t('cancel'),
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: t('ok'),
+        onPress: () => {
+          ConversationApi.getAllConversation().then((res: any) => {
+            setListConversation(
+              res.data.filter((i: any) => i.isActive === true),
+            );
+          });
+          appSocket?.unmatch(targetUser.id, targetUser?.fullName);
+        },
+        style: 'destructive',
+      },
+    ]);
   };
 
   const onGoBack = () => {
-    goBack();
     if (isNavFromNoti) {
-      navigate(ROUTE_NAMES.MESSAGE as never);
+      replace(ROUTE_NAMES.MESSAGE as never);
+      return;
     }
+    goBack();
+  };
+
+  const {onShowGlobalModal, onHideGlobalModal} = useGlobalModalController();
+  const onReport = () => {
+    onShowGlobalModal({
+      visible: true,
+      position: Position.center,
+      children: <ReportModal />,
+      yesNoOption: {
+        visible: true,
+        onNo: () => onHideGlobalModal(),
+        onYes: () => {
+          ConversationApi.getAllConversation().then((res: any) => {
+            setListConversation(
+              res.data.filter((i: any) => i.isActive === true),
+            );
+          });
+          appSocket?.unmatch(targetUser.id, targetUser?.fullName);
+          onHideGlobalModal();
+        },
+      },
+    });
   };
 
   return (
@@ -48,13 +109,29 @@ const HeaderConversation = ({
           <TitleCustom title={targetUser?.fullName} textStyle={styles.name} />
         </TouchableOpacity>
       </View>
-      <IconButton onPress={onCall} style={{padding: 10}}>
-        <FontAwesomeIcon
-          icon={faFlagUsa}
-          size={25}
-          color={colors.black_opacity}
-        />
-      </IconButton>
+      <View style={{flexDirection: 'row'}}>
+        {/* <IconButton onPress={onCall} style={{padding: 10}}>
+          <FontAwesomeIcon
+            icon={faVideoCamera}
+            size={25}
+            color={colors.black_opacity}
+          />
+        </IconButton> */}
+        <IconButton onPress={onReport} style={{padding: 10}}>
+          <FontAwesomeIcon
+            icon={faFlagUsa}
+            size={25}
+            color={colors.black_opacity}
+          />
+        </IconButton>
+        <IconButton onPress={onUnmatch} style={{padding: 10}}>
+          <FontAwesomeIcon
+            icon={faXmarkCircle}
+            size={25}
+            color={colors.black_opacity}
+          />
+        </IconButton>
+      </View>
     </View>
   );
 };

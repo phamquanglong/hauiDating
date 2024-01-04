@@ -1,7 +1,6 @@
-import React from 'react';
-import {Animated, StyleSheet} from 'react-native';
+import React, {useCallback} from 'react';
+import {Animated, StyleSheet, Text, View} from 'react-native';
 import {colors} from '~utils/colors';
-import RangeSlider from '@jesster2k10/react-native-range-slider';
 import {useAnimated} from '~hooks/useAnimated';
 import {TitleCustom} from '~components/TitleCustom';
 import {useTranslation} from 'react-i18next';
@@ -9,6 +8,7 @@ import Gender from './Gender';
 import {useSetupProfile} from '~zustands/useSetupProfile';
 import {ISettings} from '~apis/User';
 import {useEditInfoStore} from '~zustands/useEditInfoStore';
+import RangeSlider from '@jesster2k10/react-native-range-slider';
 
 interface SettingsProfileProps {
   settings?: ISettings;
@@ -20,50 +20,51 @@ const SettingsProfile = ({settings}: SettingsProfileProps) => {
   const {editInfo, setEditInfo} = useEditInfoStore();
   const {transformValue} = useAnimated();
 
-  const onChangeOld = (min: number, max: number) => {
-    if (!!settings && min !== 0 && max !== 0 && editInfo?.settings) {
+  const onChangeOld = useCallback((low: number, high: number) => {
+    if (!!settings && low !== 0 && high !== 0 && editInfo) {
       setEditInfo({
         ...editInfo,
         settings: {
-          ...editInfo?.settings,
-          old: [min, max],
+          ...editInfo.settings,
+          old: [low, high],
         },
       });
       return;
     }
     setupProfile?.settingsProfile &&
-      min !== 0 &&
-      max !== 0 &&
+      low !== 0 &&
+      high !== 0 &&
       setSetupProfile({
         ...setupProfile,
         settingsProfile: {
           ...setupProfile?.settingsProfile,
-          old: [min, max],
+          old: [low, high],
         },
       });
-  };
+  }, []);
 
-  const onChangeDistance = (min: number, max: number) => {
-    if (!!settings && max !== 0 && editInfo?.settings) {
+  const onChangeDistance = useCallback((low: number, high: number) => {
+    // console.log(editInfo?.settings, setupProfile);
+    if (!!settings && high !== 0 && editInfo) {
       setEditInfo({
         ...editInfo,
         settings: {
           ...editInfo?.settings,
-          distance: [min, max],
+          distance: [low, high],
         },
       });
       return;
     }
     setupProfile?.settingsProfile &&
-      max !== 0 &&
+      high !== 0 &&
       setSetupProfile({
         ...setupProfile,
         settingsProfile: {
           ...setupProfile?.settingsProfile,
-          distance: [min, max],
+          distance: [low, high],
         },
       });
-  };
+  }, []);
 
   return (
     <Animated.View
@@ -112,6 +113,19 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     borderColor: colors.primary,
     maxHeight: '100%',
+  },
+  rail: {
+    backgroundColor: colors.bg_light_gray,
+    height: 3,
+    width: '100%',
+    borderRadius: 100,
+  },
+  railSelected: {backgroundColor: colors.primary, height: 3, width: '100%'},
+  thumb: {
+    backgroundColor: colors.primary,
+    width: 20,
+    height: 20,
+    borderRadius: 100,
   },
 });
 

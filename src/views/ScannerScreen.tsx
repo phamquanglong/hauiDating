@@ -55,7 +55,11 @@ export default function ScannerScreen() {
             />
           ) : device == null ? (
             <View
-              style={{backgroundColor: 'green', width: 200, aspectRatio: 1 / 1}}
+              style={{
+                backgroundColor: colors.black,
+                width: (width * 2) / 3,
+                aspectRatio: 1 / 1,
+              }}
             />
           ) : (
             <Camera

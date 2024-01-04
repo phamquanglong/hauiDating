@@ -31,10 +31,11 @@ const EditInfoScreen = () => {
   const toast = useToast();
 
   useEffect(() => {
-    setEditInfo({
-      ...userInfo,
-      images: userInfo?.images.map(i => i.imageUrl),
-    });
+    userInfo &&
+      setEditInfo({
+        ...userInfo,
+        images: userInfo?.images.map(i => i.imageUrl),
+      });
   }, []);
 
   const _renderItem = ({item}: {item: string}) => {

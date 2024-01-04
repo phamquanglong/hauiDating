@@ -36,7 +36,7 @@ export enum SwipeAction {
 }
 
 const ListFooterComponent = ({itemUser, carouselContainerRef}: CardProps) => {
-  const {getHobbies} = useGetHobbies();
+  const {getHobbies, getBgColor} = useGetHobbies();
   const {navigate} = useNavigation<any>();
   const onPress = () => {
     navigate(ROUTE_NAMES.USERDETAIL as never, {
@@ -58,9 +58,17 @@ const ListFooterComponent = ({itemUser, carouselContainerRef}: CardProps) => {
           textStyle={styles.ageFooter}
         />
       </View>
-      <View style={{flexDirection: 'row', marginVertical: 10}}>
-        {itemUser.userHobbies.map(i => (
-          <View style={styles.hobbiesTag} key={i.id}>
+      <View
+        style={{
+          flexDirection: 'row',
+          marginVertical: 10,
+          width: width * 0.85,
+          flexWrap: 'wrap',
+        }}>
+        {itemUser.userHobbies.map((i, index) => (
+          <View
+            style={[styles.hobbiesTag, {backgroundColor: getBgColor(index)}]}
+            key={i.id}>
             <TitleCustom title={getHobbies(i.id)?.name ?? ''} />
           </View>
         ))}
@@ -91,19 +99,20 @@ const Card = ({itemUser, carouselContainerRef}: CardProps) => {
   };
 
   const onSwipe = (direction: SwipeType | any) => {
-    carouselContainerRef.current?.snapToNext();
     switch (direction) {
       case SwipeType.LEFT:
         UserActionsApi.createAction({
           targetUserId: itemUser.id,
           action: SwipeAction.DISLIKE,
         });
+        carouselContainerRef.current?.snapToNext();
         break;
       case SwipeType.RIGHT:
         UserActionsApi.createAction({
           targetUserId: itemUser.id,
           action: SwipeAction.LIKE,
         });
+        carouselContainerRef.current?.snapToNext();
         break;
       default:
         return;
@@ -133,7 +142,7 @@ const Card = ({itemUser, carouselContainerRef}: CardProps) => {
         dotsLength={itemUser.images.length}
       />
       <Carousel
-        onBeforeSnapToItem={(index: number) => setCurrentIndex(index)}
+        onSnapToItem={(index: number) => setCurrentIndex(index)}
         ref={carouselRef}
         scrollEnabled={false}
         data={itemUser?.images}
@@ -175,6 +184,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     marginEnd: 10,
+    marginBottom: 10,
     borderRadius: 100,
   },
 });

@@ -72,7 +72,7 @@ export const Audio = () => {
       {showFileName && (
         <View style={styles.name}>
           <Text>{audio?.fileName?.split('_').join(' ')}</Text>
-          <Text>{t.do('home.audio_name')}</Text>
+          <Text>{t('home.audio_name')}</Text>
         </View>
       )}
       <RNBounceable

@@ -12,29 +12,32 @@ import {ROUTE_NAMES} from '~utils/constants';
 import SideBarAccount from './SideBarAccount';
 import {DrawerContentComponentProps} from '@react-navigation/drawer';
 import {useUserInfo} from '~zustands/useUserInfo';
+import {useSocketStore} from '~zustands/useSocketStore';
 
 export const SideBarCustom = (props: DrawerContentComponentProps) => {
   const {t} = useTranslation();
   const {dispatch} = useNavigation();
   const {clearAll} = useServiceZustands();
   const {userInfo} = useUserInfo();
+  const {appSocket} = useSocketStore();
 
   const onLogout = () => {
     storage.set('accessToken', '');
     storage.set('userInfo', '');
     clearAll();
+    appSocket?.disconnect();
     dispatch(StackActions.replace(ROUTE_NAMES.LOGIN));
   };
 
   const alertLogout = () => {
     Alert.alert('', t('logoutConfirm', {account: userInfo?.userName}), [
       {
-        text: 'Cancel',
+        text: t('cancel'),
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
       {
-        text: 'OK',
+        text: t('ok'),
         onPress: onLogout,
       },
     ]);

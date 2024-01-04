@@ -1,6 +1,6 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList} from 'react-native';
 import {AnimatedContainer} from '~components/AnimatedContainer';
 import {HeaderCustom} from '~components/HeaderCustom';
 import MessageItem from '~components/message/MessageItem';
@@ -10,18 +10,25 @@ import {colors} from '~utils/colors';
 import {isEmpty} from 'lodash';
 import {useSocketStore} from '~zustands/useSocketStore';
 import ConversationApi from '~apis/conversation.api';
+import Empty from '~components/Empty';
 
 const MessageScreen = () => {
   const {t} = useTranslation();
   const {userInfo} = useUserInfo();
+  const [refresh, setRefresh] = useState(false);
 
   const {appSocket, setListUserOnline, setListConversation, listConversation} =
     useSocketStore();
 
-  useEffect(() => {
-    ConversationApi.getAllConversation().then(res => {
-      setListConversation(res.data);
+  const getAllConversation = () => {
+    ConversationApi.getAllConversation().then((res: any) => {
+      setListConversation(res.data.filter((i: any) => i.isActive === true));
+      setRefresh(false);
     });
+  };
+
+  useEffect(() => {
+    getAllConversation();
   }, [setListConversation]);
 
   useEffect(() => {
@@ -61,26 +68,16 @@ const MessageScreen = () => {
     <AnimatedContainer style={{height: height}}>
       <HeaderCustom canGoBack={false} title={t('message.title')} />
       <FlatList
+        refreshing={refresh}
+        onRefresh={getAllConversation}
         contentContainerStyle={{backgroundColor: colors.white, flex: 1}}
         style={{flex: 1}}
         data={data}
         renderItem={_renderItem}
-        ListEmptyComponent={
-          <View style={styles.container}>
-            <Text>{t('empty')}</Text>
-          </View>
-        }
+        ListEmptyComponent={<Empty />}
       />
     </AnimatedContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 0.5,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default MessageScreen;

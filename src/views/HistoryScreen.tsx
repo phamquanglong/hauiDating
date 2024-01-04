@@ -11,6 +11,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import UserActionsApi from '~apis/user-actions.api';
 import {useHistoryStore} from '~zustands/useHistoryStore';
 import AppLoading from '~components/AppLoading';
+import LikedMeTab from './history-tabs/LikedMeTab';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -40,7 +41,7 @@ const HistoryTabs = () => {
               break;
             default:
               setLikedMeList(arr);
-              break;
+              return;
           }
         });
         setLoading(false);
@@ -66,7 +67,7 @@ const HistoryTabs = () => {
         }}>
         <Tab.Screen name={t('liked')} component={LikedTab} />
         <Tab.Screen name={t('disliked')} component={DislikedTab} />
-        <Tab.Screen name={t('liked-me')} component={DislikedTab} />
+        <Tab.Screen name={t('liked-me')} component={LikedMeTab} />
       </Tab.Navigator>
       {loading && <AppLoading />}
     </>

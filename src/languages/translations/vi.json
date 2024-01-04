@@ -103,5 +103,25 @@
   "scanQrcode": "Quét mã QR",
   "logoutConfirm": "Bạn có chắc muốn đăng xuất tài khoản {{account}} không?",
   "empty": "Không có dữ liệu nào",
-  "removeMessageConfirm": "Bạn có chắc muốn xóa tin nhắn này không?"
+  "removeMessageConfirm": "Bạn có chắc muốn xóa tin nhắn này không?",
+  "messageIsRemoved": "Tin nhắn đã bị xóa",
+  "image": "Hình ảnh",
+  "unmatchConfirm": "Bạn có chắc muốn hủy ghép đôi với người dùng {{user}} không?",
+  "notiUnmatch": "{{user}} đã hủy ghép đôi với bạn",
+  "ok": "Xác nhận",
+  "cancel": "Hủy",
+  "report": {
+    "title": "Lí do báo cáo",
+    "harassment": "Quấy rối",
+    "inappropriate_content": "Nội dung không thích hợp",
+    "fake_profile": "Thông tin giả mạo",
+    "scamming": "Hoạt động lừa đảo",
+    "threatening_behavior": "Hành vi đe dọa",
+    "unwanted_communication": "Giao tiếp không mong muốn",
+    "other": "Khác"
+   },
+   "languages": {
+    "vi": "Tiếng Việt",
+    "en": "Tiếng Anh"
+   }
 }

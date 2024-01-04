@@ -26,7 +26,10 @@ const BirthdayPicker = ({date}: BirthdayPickerProps) => {
     <View style={{marginTop: 20}}>
       <TitleCustom title={t('setupProfile.birthday')} require />
       <ButtonPrimary
-        text={date ?? (setupProfile?.birthday as string)}
+        text={moment(
+          date ?? (setupProfile?.birthday as string),
+          'YYYY/MM/DD',
+        ).format('DD/MM/YYYY')}
         onPress={onOpen}
         style={styles.button}
         iconRight={faCalendarAlt}
@@ -36,8 +39,8 @@ const BirthdayPicker = ({date}: BirthdayPickerProps) => {
         modal
         maximumDate={new Date()}
         open={open}
-        date={moment(date ?? setupProfile?.birthday, 'DD-MM-YYYY').toDate()}
-        onConfirm={date => {
+        date={moment(date ?? setupProfile?.birthday, 'YYYY/MM/DD').toDate()}
+        onConfirm={value => {
           setOpen(false);
           if (date) {
             editInfo?.profile &&
@@ -45,14 +48,14 @@ const BirthdayPicker = ({date}: BirthdayPickerProps) => {
                 ...editInfo,
                 profile: {
                   ...editInfo?.profile,
-                  birthday: moment(date).format('DD/MM/YYYY'),
+                  birthday: moment(value).format('YYYY/MM/DD'),
                 },
               });
             return;
           }
           setSetupProfile({
             ...setupProfile,
-            birthday: moment(date).format('DD/MM/YYYY'),
+            birthday: moment(value).format('YYYY/MM/DD'),
           });
         }}
         onCancel={() => {

@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Linking, StyleSheet, View} from 'react-native';
+import {Alert, Linking, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {AnimatedContainer} from '~components/AnimatedContainer';
 import useHomeScreenController from '~hooks/useHomeScreenController';
@@ -14,10 +14,19 @@ import {IUser} from '~apis/User';
 import AppLoading from '~components/AppLoading';
 import {ROUTE_NAMES} from '~utils/constants';
 import {Spacer} from '~components/Spacer';
+import {DynamicLinkServices} from '~services/DynamicLink.service';
+import {useSocketStore} from '~zustands/useSocketStore';
+import ConversationApi from '~apis/conversation.api';
+import {useTranslation} from 'react-i18next';
+import {getCurrentRoute, goBack} from '~services/Navigation.service';
+import {useUserInfo} from '~zustands/useUserInfo';
 
 const HomeScreen = () => {
+  const {t} = useTranslation();
   const {suggestUsers, loading} = useHomeScreenController();
   const navigation = useNavigation<any>();
+  const {appSocket, setListConversation} = useSocketStore();
+  const {userInfo} = useUserInfo();
 
   function handleDeepLink(e: any) {
     console.log('linkRoute: ', e);
@@ -27,11 +36,35 @@ const HomeScreen = () => {
   useEffect(() => {
     let subcribtion = Linking.addEventListener('url', handleDeepLink);
     subcribtion.subscriber;
+    const unsubcribe = DynamicLinkServices.handleForegroundEvent();
+    DynamicLinkServices.handleBackgroundEvent();
 
     return () => {
       subcribtion.remove();
+      unsubcribe();
     };
   }, []);
+
+  useEffect(() => {
+    appSocket?.receiveUnmatch((res: any) => {
+      res &&
+        ConversationApi.getAllConversation().then((res: any) => {
+          setListConversation(res.data.filter((i: any) => i.isActive === true));
+        });
+      if (userInfo && res.userId !== userInfo?.id) {
+        Alert.alert('', t('notiUnmatch', {user: res?.fullName}), [
+          {
+            text: t('ok'),
+            onPress: () =>
+              getCurrentRoute().name === ROUTE_NAMES.CONVERSATION && goBack(),
+          },
+        ]);
+      }
+      if (userInfo && res.userId === userInfo?.id) {
+        goBack();
+      }
+    });
+  }, [appSocket, setListConversation, t, userInfo]);
 
   const onMenu = () => {
     navigation.openDrawer();

@@ -1,4 +1,5 @@
 import {useTranslation} from 'react-i18next';
+import {colors} from '~utils/colors';
 
 export const useGetHobbies = () => {
   const {t} = useTranslation();
@@ -52,11 +53,32 @@ export const useGetHobbies = () => {
 
   const getHobbies = (id: number) => {
     return items.find(
-      i => i.id === (id > 10 ? Number(id.toString().split('')[1]) : id),
+      i =>
+        i.id ===
+        (id > 10
+          ? Number(id.toString().split('')[id.toString().length - 1])
+          : id),
     );
   };
+
+  const getBgColor = (index: number) => {
+    switch (index) {
+      case 1:
+        return colors.bg_yellow;
+      case 2:
+        return colors.bg_light_blue;
+      case 3:
+        return colors.bg_light_red;
+      case 4:
+        return colors.bg_light_green;
+      default:
+        return colors.bg_light_gray;
+    }
+  };
+
   return {
     hobbies: items,
     getHobbies,
+    getBgColor,
   };
 };

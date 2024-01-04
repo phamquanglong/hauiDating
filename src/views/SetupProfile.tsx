@@ -10,13 +10,16 @@ import Hobbies from '~components/setupProfile/Hobbies';
 import PickImage from '~components/setupProfile/PickImage';
 import SettingsProfile from '~components/setupProfile/SettingsProfile';
 import {colors} from '~utils/colors';
-import {useSetupProfile} from '~zustands/useSetupProfile';
+import {defaultProfile, useSetupProfile} from '~zustands/useSetupProfile';
 import {useUserInfo} from '~zustands/useUserInfo';
 import GetLocation from 'react-native-get-location';
 import {useToast} from 'react-native-toast-notifications';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import {ROUTE_NAMES} from '~utils/constants';
 import {storage} from '~services/localStorage';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faCheckCircle} from '@fortawesome/free-solid-svg-icons';
+import moment from 'moment';
 
 const customStyles = {
   stepIndicatorSize: 25,
@@ -46,7 +49,7 @@ const SetupProfile = () => {
   const {t} = useTranslation();
   const [currentStep, setCurrentStep] = useState(0);
   const {userInfo, setUserInfo} = useUserInfo();
-  const {setupProfile} = useSetupProfile();
+  const {setupProfile, setSetupProfile} = useSetupProfile();
   const labels = [
     t('setupProfile.basicInfo'),
     t('setupProfile.hobbies'),
@@ -65,9 +68,10 @@ const SetupProfile = () => {
     if (currentStep === labels.length - 1) {
       GetLocation.getCurrentPosition({
         enableHighAccuracy: true,
-        timeout: 60000,
+        timeout: 6000,
       })
         .then(location => {
+          console.log(setupProfile?.birthday);
           UserApi.postUserInformation({
             profile: {
               fullName: setupProfile?.fullName ?? '',
@@ -89,9 +93,12 @@ const SetupProfile = () => {
             toast.show(t('setupProfile.success'), {
               type: 'success',
               duration: 2000,
+              successIcon: (
+                <FontAwesomeIcon icon={faCheckCircle} color={colors.white} />
+              ),
             });
             storage.set('userInfo', JSON.stringify(res.data));
-
+            setSetupProfile(defaultProfile);
             setTimeout(() => {
               dispatch(StackActions.replace(ROUTE_NAMES.HOMEDRAWER));
             }, 3000);
@@ -99,7 +106,7 @@ const SetupProfile = () => {
         })
         .catch(error => {
           const {code, message} = error;
-          console.warn(code, message);
+          console.log(code, message);
         });
       return;
     }

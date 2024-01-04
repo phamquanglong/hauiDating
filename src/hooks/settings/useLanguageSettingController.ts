@@ -22,5 +22,6 @@ export const useLanguageSettingController = () => {
   return {
     getCurrentLanguage,
     changeLanguage,
+    isVN: getCurrentLanguage() === LANGUAGE_NAMES.VIETNAMESE,
   };
 };

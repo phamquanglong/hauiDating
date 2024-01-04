@@ -24,7 +24,7 @@ interface ISetupProfile {
 export const defaultProfile = {
   fullName: '',
   gender: GENDER.MALE,
-  birthday: moment(new Date()).format('DD/MM/YYYY'),
+  birthday: moment(new Date()).format('YYYY/MM/DD'),
   bio: '',
   hobbies: [],
   image: [],

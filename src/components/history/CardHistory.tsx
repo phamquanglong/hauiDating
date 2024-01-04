@@ -1,5 +1,5 @@
 import React from 'react';
-import {ImageBackground, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import {IImage, IUser} from '~apis/User';
 import {TitleCustom} from '~components/TitleCustom';
@@ -8,30 +8,13 @@ import {width} from '~utils/commons';
 import Gradient from 'react-native-linear-gradient';
 import LocationTag from '~components/LocationTag';
 import {Spacer} from '~components/Spacer';
-import {SwipeAction} from '~components/card/Card';
-import UserActionsApi from '~apis/user-actions.api';
-import {ActionTypes} from '~views/history-tabs/LikedTab';
-import {useHistoryStore} from '~zustands/useHistoryStore';
 import {useNavigation} from '@react-navigation/native';
 import {ROUTE_NAMES} from '~utils/constants';
+import {Image} from 'react-native';
+import RNBounceable from '@freakycoder/react-native-bounceable';
 
 const Footer = ({targetUser, action}: {targetUser: IUser; action: string}) => {
-  const isLike = action === SwipeAction.LIKE;
-  const {setLikedList, setDislikedList} = useHistoryStore();
   const {navigate} = useNavigation<any>();
-  const onPress = () => {
-    UserActionsApi.createAction({
-      targetUserId: targetUser.id,
-      action: isLike ? SwipeAction.DISLIKE : SwipeAction.LIKE,
-    }).then(() => {
-      UserActionsApi.getHistory(ActionTypes.DISLIKED).then(res => {
-        setDislikedList(res.data);
-      });
-      UserActionsApi.getHistory(ActionTypes.LIKED).then(res => {
-        setLikedList(res.data);
-      });
-    });
-  };
 
   const onNavigateDetail = () => {
     navigate(ROUTE_NAMES.USERDETAIL as never, {
@@ -44,7 +27,7 @@ const Footer = ({targetUser, action}: {targetUser: IUser; action: string}) => {
     <Gradient
       style={{
         height: 100,
-        width: width * 0.45,
+        width: width * 0.48,
         position: 'absolute',
         borderRadius: 10,
         bottom: 0,
@@ -65,25 +48,12 @@ const Footer = ({targetUser, action}: {targetUser: IUser; action: string}) => {
         }}>
         <View onTouchEnd={onNavigateDetail}>
           <TitleCustom
-            title={targetUser.profile.fullName}
+            title={targetUser?.profile?.fullName}
             textStyle={styles.name}
           />
           <Spacer value={5} />
           <LocationTag itemUser={targetUser} />
         </View>
-        {/* <IconButton
-          onPress={onPress}
-          style={[
-            styles.button,
-            {
-              backgroundColor: isLike ? colors.inactive : colors.primary,
-            },
-          ]}>
-          <FontAwesomeIcon
-            icon={isLike ? faHeartBroken : faHeart}
-            color={isLike ? colors.black : colors.white}
-          />
-        </IconButton> */}
       </View>
     </Gradient>
   );
@@ -96,35 +66,25 @@ const CardHistory = ({
   targetUser: IUser;
   action: string;
 }) => {
-  const colorBadge =
-    action === SwipeAction.LIKE ? colors.success : colors.error;
+  const {navigate} = useNavigation<any>();
+  const onNavigateDetail = () => {
+    navigate(ROUTE_NAMES.USERDETAIL as never, {
+      itemUser: targetUser,
+      action: action,
+    });
+  };
   const _renderImage = ({item}: {item: IImage}) => {
     return (
-      <ImageBackground
-        source={{uri: item.imageUrl}}
-        style={{
-          width: width * 0.45,
-          aspectRatio: 2 / 3,
-          backgroundColor: colors.inactive,
-        }}>
-        <View
+      <RNBounceable onPress={onNavigateDetail}>
+        <Image
+          source={{uri: item.imageUrl}}
           style={{
-            borderWidth: 2,
-            borderColor: colorBadge,
-            padding: 10,
-            minWidth: 80,
-            borderRadius: 5,
-            alignSelf: 'flex-end',
-            margin: 10,
-            alignItems: 'center',
-            opacity: 0.6,
-          }}>
-          <TitleCustom
-            title={action}
-            textStyle={{color: colorBadge, fontWeight: 'bold', fontSize: 16}}
-          />
-        </View>
-      </ImageBackground>
+            width: width * 0.48,
+            aspectRatio: 2 / 3,
+            backgroundColor: colors.inactive,
+          }}
+        />
+      </RNBounceable>
     );
   };
   return (
@@ -133,8 +93,8 @@ const CardHistory = ({
         data={targetUser.images}
         renderItem={_renderImage}
         layout="tinder"
-        sliderWidth={width * 0.45}
-        itemWidth={width * 0.45}
+        sliderWidth={width * 0.48}
+        itemWidth={width * 0.48}
       />
       <Footer targetUser={targetUser} action={action} />
     </View>
@@ -143,8 +103,8 @@ const CardHistory = ({
 
 const styles = StyleSheet.create({
   historyCard: {
-    borderRadius: 10,
-    marginBottom: 10,
+    borderRadius: 8,
+    marginBottom: 5,
     overflow: 'hidden',
   },
   name: {

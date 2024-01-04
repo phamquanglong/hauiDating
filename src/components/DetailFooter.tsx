@@ -14,7 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 
 interface DetailFooterProps {
   itemUser: IUser;
-  carouselContainerRef: RefObject<Carousel<any>>;
+  carouselContainerRef?: RefObject<Carousel<any>>;
 }
 
 const DetailFooter = ({itemUser, carouselContainerRef}: DetailFooterProps) => {
@@ -24,7 +24,7 @@ const DetailFooter = ({itemUser, carouselContainerRef}: DetailFooterProps) => {
       targetUserId: itemUser.id,
       action: SwipeAction.DISLIKE,
     }).then(() => {
-      carouselContainerRef.current?.snapToNext();
+      carouselContainerRef?.current?.snapToNext();
       goBack();
     });
   };
@@ -34,7 +34,7 @@ const DetailFooter = ({itemUser, carouselContainerRef}: DetailFooterProps) => {
       targetUserId: itemUser.id,
       action: SwipeAction.LIKE,
     }).then(() => {
-      carouselContainerRef.current?.snapToNext();
+      carouselContainerRef?.current?.snapToNext();
       goBack();
     });
   };

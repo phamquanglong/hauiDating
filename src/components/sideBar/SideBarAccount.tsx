@@ -30,7 +30,9 @@ const SideBarAccount = ({navigation}: SideBarAccountProps) => {
       <View>
         <Text style={styles.userName}>{userInfo?.userName}</Text>
         <Spacer value={5} />
-        <Text style={styles.email}>{userInfo?.email}</Text>
+        <Text numberOfLines={1} style={styles.email}>
+          {userInfo?.email}
+        </Text>
       </View>
     </RNBounceable>
   );
@@ -53,6 +55,7 @@ const styles = StyleSheet.create({
   },
   email: {
     color: colors.black_opacity,
+    maxWidth: 180,
   },
 });
 

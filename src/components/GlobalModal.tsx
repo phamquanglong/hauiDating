@@ -12,6 +12,7 @@ import {Spacer} from './Spacer';
 import {colors} from '~utils/colors';
 import useGlobalModalController from '~hooks/useGlobalModalController';
 import {useTranslation} from 'react-i18next';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 const YesNoOption = (props: {
   value: {
@@ -25,7 +26,7 @@ const YesNoOption = (props: {
   return visible ? (
     <View style={styles.yesNoOption}>
       <ButtonPrimary
-        text={t('home.cancel')}
+        text={t('cancel')}
         onPress={onNo}
         style={[
           {
@@ -37,7 +38,7 @@ const YesNoOption = (props: {
       />
       <Spacer horizontal value={10} />
       <ButtonPrimary
-        text={t.do('home.confirm')}
+        text={t('ok')}
         onPress={onYes}
         style={[
           {
@@ -45,7 +46,7 @@ const YesNoOption = (props: {
           },
           styles.btn,
         ]}
-        textStyle={{color: colors.text.yellow}}
+        textStyle={{color: colors.text.white}}
       />
     </View>
   ) : null;
@@ -74,18 +75,20 @@ const GlobalModal = () => {
               },
             ]}>
             {children}
+            {yesNoOption.visible && <YesNoOption value={yesNoOption} />}
           </Animated.View>
         ) : (
           <Animated.View
             style={[
               styles.content,
-              {transform: [{translateX: transformValue}]},
+              {transform: [{translateY: transformValue}]},
             ]}>
             <Text style={styles.title}>{message}</Text>
             <YesNoOption value={yesNoOption} />
           </Animated.View>
         )}
       </View>
+      <KeyboardSpacer />
     </Modal>
   );
 };

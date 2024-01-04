@@ -1,11 +1,10 @@
-import {images} from './images';
 import {ROUTE_NAMES} from '~utils/constants';
 import {colors} from '~utils/colors';
 import {Position} from '~zustands/useHomeStore';
 import {Dimensions, ViewStyle} from 'react-native';
 import moment from 'moment';
 import notifee from '@notifee/react-native';
-import {mediaDevices} from 'react-native-webrtc';
+// import {mediaDevices} from 'react-native-webrtc';
 
 export const width = Dimensions.get('window').width;
 export const height = Dimensions.get('window').height;
@@ -15,32 +14,6 @@ export const getTimer = (timer: number) => {
   const second = timer - minute * 60;
   const secondStr = second < 10 ? '0' + second : second;
   return minute + ':' + secondStr;
-};
-
-export const getImageTree = (
-  isPlant: boolean,
-  timer: number,
-  currentTimer: number,
-  tree: Tree,
-  isSuccess: boolean | null,
-) => {
-  const lengthTimer = timer - currentTimer;
-
-  if (isPlant && currentTimer !== 0) {
-    if (lengthTimer < timer / 2) {
-      return images.ic_sprout;
-    } else {
-      return images.ic_sapling;
-    }
-  } else {
-    if (isSuccess) {
-      return tree.icon;
-    } else if (!isSuccess && isSuccess !== null) {
-      return images.ic_tree_without_leaves;
-    } else {
-      return tree.icon;
-    }
-  }
 };
 
 export const getStatusBarColor = (name: string) => {
@@ -102,7 +75,7 @@ export const validatePassword = (value: string) => {
 };
 
 export const getAge = (value: string) => {
-  return moment().get('year') - moment(value, 'DD/MM/YYYY').get('year');
+  return moment().get('year') - moment(value, 'YYYY/MM/DD').get('year');
 };
 
 export function getDistanceFromLatLonInKm(
@@ -157,34 +130,34 @@ export async function onDisplayNotification(title: string, body: string) {
   });
 }
 
-export const getStream = async () => {
-  let isFront = true;
-  const sourcesInfos: any[] = (await mediaDevices.enumerateDevices()) as any[];
-  console.log(sourcesInfos);
-  let videoSourceId;
-  for (let i = 0; i < sourcesInfos.length; i++) {
-    const sourcesInfo = sourcesInfos[i];
-    if (
-      sourcesInfo.kind == 'videoinput' &&
-      sourcesInfo.facing == (isFront ? 'front' : 'environment')
-    ) {
-      videoSourceId = sourcesInfo.deviceId;
-    }
-  }
+// export const getStream = async () => {
+//   let isFront = true;
+//   const sourcesInfos: any[] = (await mediaDevices.enumerateDevices()) as any[];
+//   console.log(sourcesInfos);
+//   let videoSourceId;
+//   for (let i = 0; i < sourcesInfos.length; i++) {
+//     const sourcesInfo = sourcesInfos[i];
+//     if (
+//       sourcesInfo.kind == 'videoinput' &&
+//       sourcesInfo.facing == (isFront ? 'front' : 'environment')
+//     ) {
+//       videoSourceId = sourcesInfo.deviceId;
+//     }
+//   }
 
-  const stream = await mediaDevices.getUserMedia({
-    audio: true,
-    video: {
-      width: 640,
-      height: 480,
-      frameRate: 30,
-      facingMode: isFront ? 'user' : 'environment',
-      deviceId: videoSourceId,
-    },
-  });
+//   const stream = await mediaDevices.getUserMedia({
+//     audio: true,
+//     video: {
+//       width: 640,
+//       height: 480,
+//       frameRate: 30,
+//       facingMode: isFront ? 'user' : 'environment',
+//       deviceId: videoSourceId,
+//     },
+//   });
 
-  if (typeof stream !== 'boolean') {
-    return stream;
-  }
-  return null;
-};
+//   if (typeof stream !== 'boolean') {
+//     return stream;
+//   }
+//   return null;
+// };

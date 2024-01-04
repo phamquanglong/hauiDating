@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {TitleCustom} from '~components/TitleCustom';
@@ -15,6 +15,10 @@ const AboutMe = ({bio}: AboutMeProps) => {
   const {setSetupProfile, setupProfile} = useSetupProfile();
   const {editInfo, setEditInfo} = useEditInfoStore();
   const [length, setLength] = useState(0);
+
+  useEffect(() => {
+    bio && setLength(bio.length);
+  }, [bio]);
 
   const onChangeText = (e: string) => {
     if (!!bio && editInfo?.profile) {

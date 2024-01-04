@@ -4,6 +4,7 @@ import {useHistoryStore} from '~zustands/useHistoryStore';
 
 const DislikedTab = () => {
   const {dislikedList} = useHistoryStore();
+
   return <ListCardHistory list={dislikedList} />;
 };
 

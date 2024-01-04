@@ -9,7 +9,7 @@ export const usePushNotification = () => {
       authStatus === firebase.messaging.AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
-      console.log('Authorization status:', authStatus);
+      // console.log('Authorization status:', authStatus);
     }
   }
 
@@ -24,22 +24,6 @@ export const usePushNotification = () => {
     } catch (error) {
       console.log({error});
     }
-    // const deviceToken = await firebase.messaging().getToken();
-    // console.log('deviceToken', deviceToken);
-    // firebase
-    //   .messaging()
-    //   .hasPermission()
-    //   .then(async enabled => {
-    //     if (enabled) {
-    //       console.log('123', enabled);
-
-    //       firebase
-    //         .messaging()
-    //         .getToken()
-    //         .then(res => console.log(res))
-    //         .catch(err => console.log(err));
-    //     }
-    //   });
   }
 
   return {

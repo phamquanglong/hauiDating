@@ -113,9 +113,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: colors.white,
   },
   pagination: {
     flex: 0.1,
+    backgroundColor: colors.white,
   },
   goBackBtn: {
     padding: 10,

@@ -1,5 +1,5 @@
 import {useEffect, useRef} from 'react';
-import {Animated} from 'react-native';
+import {Animated, Keyboard} from 'react-native';
 import {GlobalModalType} from '~zustands/useHomeStore';
 import {useHomeStore} from '~zustands/index';
 import {getPosition} from '~utils/commons';

@@ -1,9 +1,4 @@
-import {
-  faGear,
-  faHistory,
-  faHome,
-  faMessage,
-} from '@fortawesome/free-solid-svg-icons';
+import {faHistory, faHome, faMessage} from '@fortawesome/free-solid-svg-icons';
 import {colors} from '~utils/colors';
 import {images} from '~utils/images';
 
@@ -37,7 +32,7 @@ export enum ROUTE_NAMES {
 
 export enum LANGUAGE_NAMES {
   ENGLISH = 'English',
-  VIETNAMESE = 'Vietnamese',
+  VIETNAMESE = 'Tiếng Việt',
 }
 
 export enum NAME_TAGS {
@@ -66,11 +61,11 @@ export const siderBarItems = [
     icon: faHistory,
     navigator: ROUTE_NAMES.HISTORYSTACK,
   },
-  {
-    name: 'drawer.setting',
-    icon: faGear,
-    navigator: ROUTE_NAMES.SETTINGSSTACK,
-  },
+  // {
+  //   name: 'drawer.setting',
+  //   icon: faGear,
+  //   navigator: ROUTE_NAMES.SETTINGSSTACK,
+  // },
 ];
 
 export const tags: Tag[] = [
@@ -138,6 +133,9 @@ export const WS_EVENT = {
 
   UNMATCH: 'unmtch',
   RECEIVE_UNMATCH: 'receive_unmatch',
+
+  CALL_VIDEO: 'call_video',
+  RECEIVE_CALL_VIDEO: 'receive_call_video',
 };
 
 export enum GENDER {

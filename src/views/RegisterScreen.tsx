@@ -13,9 +13,9 @@ import {useNavigation} from '@react-navigation/native';
 import InputBase from '~components/InputBase';
 import {Spacer} from '~components/Spacer';
 import ButtonPrimary from '~components/ButtonPrimary';
-import {useKeyboardListener} from '~hooks/useKeyboardListener';
 import UserApi from '~apis/user.api';
 import {useToast} from 'react-native-toast-notifications';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 const RegisterScreen = () => {
   const {t} = useTranslation();
@@ -24,7 +24,6 @@ const RegisterScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const {isKeyboardVisible} = useKeyboardListener();
   const toast = useToast();
 
   const onRegister = () => {
@@ -64,7 +63,7 @@ const RegisterScreen = () => {
     <View>
       <Gradient
         style={{
-          height: isKeyboardVisible ? height * 0.8 : height,
+          height: height,
           justifyContent: 'center',
           alignItems: 'center',
         }}
@@ -139,6 +138,7 @@ const RegisterScreen = () => {
             textStyle={{color: colors.text.white}}
           />
         </View>
+        <KeyboardSpacer />
         <LinearGradient id="path" x1="0" y1="0" x2="1" y2="1">
           <Stop offset="0" stopColor="#FFD080" stopOpacity="1" />
           <Stop offset="1" stopColor={colors.primary} stopOpacity="1" />

@@ -6,7 +6,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useNavigation} from '@react-navigation/native';
-import React, {useLayoutEffect, useRef, useState} from 'react';
+import moment from 'moment';
+import React, {memo, useLayoutEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ImageBackground,
@@ -28,6 +29,7 @@ import {Spacer} from '~components/Spacer';
 import {TitleCustom} from '~components/TitleCustom';
 import {SwipeAction} from '~components/card/Card';
 import {useGetHobbies} from '~hooks/useGetHobbies';
+import {DynamicLinkServices} from '~services/DynamicLink.service';
 import {colors} from '~utils/colors';
 import {getAge, width} from '~utils/commons';
 import {ROUTE_NAMES} from '~utils/constants';
@@ -49,11 +51,11 @@ const InfoItem = ({icon, text}: {icon: any; text: string}) => {
 
 const InfoContent = ({itemUser, id}: {itemUser: IUser; id: number}) => {
   const {t} = useTranslation();
-  const {getHobbies} = useGetHobbies();
-  const onShare = () => {
+  const {getHobbies, getBgColor} = useGetHobbies();
+  const onShare = async () => {
     Share.share({
       message: itemUser?.userName,
-      url: `deeplink://app/detail/${id}`,
+      url: await DynamicLinkServices.buildLink(id, itemUser),
     });
   };
 
@@ -74,9 +76,15 @@ const InfoContent = ({itemUser, id}: {itemUser: IUser; id: number}) => {
             textStyle={styles.ageFooter}
           />
         </View>
+        <Spacer value={10} />
         <LocationTag itemUser={itemUser} />
         <InfoItem icon={faUser} text={itemUser?.profile?.gender} />
-        <InfoItem icon={faCalendar} text={itemUser?.profile?.birthday} />
+        <InfoItem
+          icon={faCalendar}
+          text={moment(itemUser?.profile?.birthday, 'YYYY/MM/DD').format(
+            'DD/MM/YYYY',
+          )}
+        />
       </View>
       <Line bgColor={colors.inactive} />
       <View style={{padding: 20}}>
@@ -86,9 +94,17 @@ const InfoContent = ({itemUser, id}: {itemUser: IUser; id: number}) => {
       <Line bgColor={colors.inactive} />
       <View style={{padding: 20}}>
         <TitleCustom title={t('detail.hobbies')} textStyle={styles.title} />
-        <View style={{flexDirection: 'row', marginVertical: 10}}>
-          {itemUser?.userHobbies?.map(i => (
-            <View style={styles.hobbiesTag} key={i.id}>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginVertical: 10,
+            width: width * 0.85,
+            flexWrap: 'wrap',
+          }}>
+          {itemUser?.userHobbies?.map((i, index) => (
+            <View
+              style={[styles.hobbiesTag, {backgroundColor: getBgColor(index)}]}
+              key={i.id}>
               <TitleCustom title={getHobbies(i.id)?.name ?? ''} />
             </View>
           ))}
@@ -208,6 +224,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     marginEnd: 10,
+    marginBottom: 10,
     borderRadius: 100,
   },
   buttonShare: {
@@ -239,4 +256,4 @@ const styles = StyleSheet.create({
   buttonBack: {},
 });
 
-export default UserDetail;
+export default memo(UserDetail);

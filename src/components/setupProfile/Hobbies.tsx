@@ -46,7 +46,6 @@ const Hobbies = () => {
         selectedItems={setupProfile?.hobbies}
         selectText={t('setupProfile.pickItems')}
         searchInputPlaceholderText={t('setupProfile.searchPlaceholder')}
-        onChangeInput={text => console.log(text)}
         altFontFamily="ProximaNova-Light"
         tagRemoveIconColor={colors.inactive}
         tagBorderColor={colors.primary}

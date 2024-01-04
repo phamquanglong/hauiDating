@@ -1,5 +1,4 @@
 import {useEffect, useState} from 'react';
-import {Alert} from 'react-native';
 import GetLocation from 'react-native-get-location';
 import UserApi from '~apis/user.api';
 import {useSuggestUsers} from '~zustands/useSuggestUsers';
@@ -18,14 +17,14 @@ const useHomeScreenController = () => {
       setSuggestUsers(res.data);
       setLoading(prv => !prv);
     });
-  }, []);
+  }, [setSuggestUsers, setUserInfo]);
 
   useEffect(() => {
     GetLocation.getCurrentPosition({
       enableHighAccuracy: true,
       timeout: 60000,
     }).then(location => {
-      userInfo &&
+      userInfo?.profile &&
         UserApi.updateUserInformation({
           profile: {
             ...userInfo.profile,

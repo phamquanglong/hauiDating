@@ -7,7 +7,7 @@ export interface EditInfoType {
   images?: string[];
   password?: string;
   profile?: IProfile;
-  settings?: ISetting;
+  settings: ISetting;
   updatedAt?: string;
   userHobbies?: IUserHobby[];
   userName?: string;
@@ -15,12 +15,12 @@ export interface EditInfoType {
 
 interface EditInfoStore {
   editInfo: EditInfoType | null;
-  setEditInfo: (value: EditInfoType) => void;
+  setEditInfo: (value: EditInfoType | null) => void;
 }
 
 export const useEditInfoStore: UseBoundStore<StoreApi<EditInfoStore>> = create(
   set => ({
     editInfo: null,
-    setEditInfo: (value: EditInfoType) => set({editInfo: value}),
+    setEditInfo: (value: EditInfoType | null) => set({editInfo: value}),
   }),
 );

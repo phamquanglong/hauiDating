@@ -2,8 +2,10 @@ import {useEffect} from 'react';
 import {AppState} from 'react-native';
 import {storage} from '~services/localStorage';
 import useHomeStore from '~zustands/useHomeStore';
+import {useSocketStore} from '~zustands/useSocketStore';
 
 export const useLocalStorage = () => {
+  const {appSocket} = useSocketStore();
   useEffect(() => {
     AppState.addEventListener('change', handleAppStateChange);
     const jsonData = storage.getString('data');
@@ -34,6 +36,7 @@ export const useLocalStorage = () => {
       };
       storage.set('data', JSON.stringify(data));
       console.log('the app is closed');
+      appSocket?.disconnect();
     }
     // if (nextAppState === 'active') {
     //   fetchDataLocal();

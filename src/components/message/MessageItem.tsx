@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import RNBounceable from '@freakycoder/react-native-bounceable';
 import {TitleCustom} from '~components/TitleCustom';
 import {ImageBackground, StyleSheet, View} from 'react-native';
@@ -10,6 +10,8 @@ import {useNavigation} from '@react-navigation/native';
 import {ROUTE_NAMES} from '~utils/constants';
 import {find} from 'lodash';
 import {useSocketStore} from '~zustands/useSocketStore';
+import {useConversationStore} from '~zustands/useConversationStore';
+import {useTranslation} from 'react-i18next';
 
 interface MessageItemProps {
   targetUser: any;
@@ -17,8 +19,14 @@ interface MessageItemProps {
 
 const MessageItem = ({targetUser}: MessageItemProps) => {
   const {navigate} = useNavigation<any>();
+  const {t} = useTranslation();
 
   const {listUserOnline} = useSocketStore();
+  const {getLatestMessage, setLatestMessage} = useConversationStore();
+
+  useEffect(() => {
+    setLatestMessage({id: targetUser.id, message: targetUser.latestMessage});
+  }, []);
 
   const onPress = () => {
     navigate(ROUTE_NAMES.CONVERSATION as never, {
@@ -39,10 +47,10 @@ const MessageItem = ({targetUser}: MessageItemProps) => {
       <View>
         <TitleCustom title={targetUser?.fullName} textStyle={styles.title} />
         <Spacer value={5} />
-        {targetUser.latestMessage && (
+        {getLatestMessage(targetUser.id, t)?.message && (
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <TitleCustom
-              title={targetUser.latestMessage}
+              title={getLatestMessage(targetUser.id, t).message}
               textStyle={styles.text}
             />
             <View style={styles.dotSpace} />

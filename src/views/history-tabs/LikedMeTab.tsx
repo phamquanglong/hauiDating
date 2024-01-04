@@ -8,12 +8,10 @@ export enum ActionTypes {
   LIKEDME = 'liked-me',
 }
 
-const LikedTab = () => {
+const LikedMeTab = () => {
   const {likedMeList} = useHistoryStore();
 
-  console.log({likedMeList});
-
-  return <ListCardHistory list={likedMeList} />;
+  return <ListCardHistory list={likedMeList} isLikedMe />;
 };
 
-export default LikedTab;
+export default LikedMeTab;

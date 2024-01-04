@@ -6,7 +6,6 @@ import {faShareAlt} from '@fortawesome/free-solid-svg-icons';
 import {colors} from '~utils/colors';
 import {IconButton} from '~components/IconButton';
 import {height} from '~utils/commons';
-import CircleSliderComponent from '~components/CircleSlider';
 import {useGetTitleHome} from '~hooks/useGetTitleHome';
 import QRCode from 'react-native-qrcode-svg';
 
@@ -55,7 +54,6 @@ export const ShareViewShot = () => {
           format: 'png',
           quality: 0.9,
         }}>
-        <CircleSliderComponent />
         <View
           style={{
             flexDirection: 'row',

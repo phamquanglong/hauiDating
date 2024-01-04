@@ -103,5 +103,25 @@
   "scanQrcode": "Scan QR code",
   "logoutConfirm": "Are you sure you want to sign out of {{account}} account?",
   "empty": "No data",
-  "removeMessageConfirm": "Are you sure you want to remove this message?"
+  "removeMessageConfirm": "Are you sure you want to remove this message?",
+  "messageIsRemoved": "Message is removed",
+  "image": "Image",
+  "unmatchConfirm": "Are you sure you want to unmatch with {{user}}?",
+  "notiUnmatch": "{{user}} has been unmatched",
+  "ok": "OK",
+  "cancel": "Cancel",
+  "report": {
+    "title": "Report reason",
+    "harassment": "Harassment",
+    "inappropriate_content": "Inappropriate content",
+    "fake_profile": "Fake information",
+    "scamming": "Fraudulent activity",
+    "threatening_behavior": "Threatening behavior",
+    "unwanted_communication": "Unwanted communication",
+    "other": "Other"
+   },
+   "languages": {
+    "vi": "Vietnamese",
+    "en": "English"
+   }
 }

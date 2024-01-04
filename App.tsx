@@ -6,7 +6,7 @@
  */
 
 import React, {useCallback, useEffect} from 'react';
-import {StatusBar} from 'react-native';
+import {LogBox, StatusBar} from 'react-native';
 
 import MainNavigation from './src/routers/MainNavigation';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -22,7 +22,7 @@ import SplashScreen from 'react-native-splash-screen';
 import {NotifierWrapper} from 'react-native-notifier';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
-// LogBox.ignoreAllLogs();
+LogBox.ignoreAllLogs();
 
 const RNfirebaseConfig: ReactNativeFirebase.FirebaseAppOptions = {
   projectId: 'hauifocus',
@@ -49,7 +49,7 @@ function App(): JSX.Element {
     const settings = await notifee.requestPermission();
 
     if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
-      console.log('Permission settings:', settings);
+      // console.log('Permission settings:', settings);
     } else {
       console.log('User declined permissions');
     }

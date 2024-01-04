@@ -1,56 +1,97 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, Button} from 'react-native';
-import {
-  RTCView,
-  RTCPeerConnection,
-  mediaDevices,
-  MediaStream,
-} from 'react-native-webrtc';
+// import {
+//   RTCView,
+//   RTCPeerConnection,
+//   mediaDevices,
+//   MediaStream,
+// } from 'react-native-webrtc';
+import {useSocketStore} from '~zustands/useSocketStore';
 
-const VideoCallScreen = () => {
-  const [localStream, setLocalStream] = useState<MediaStream | null>();
-  const [remoteStream, setRemoteStream] = useState<MediaStream | null>();
-  const [isCalling, setIsCalling] = useState(false);
+// const configuration = {
+//   iceServers: [{urls: 'stun:stun.l.google.com:19302'}],
+// };
+// const peerConnection = new RTCPeerConnection(configuration);
 
-  useEffect(() => {
-    const startLocalStream = async () => {
-      const stream = await mediaDevices.getUserMedia({
-        audio: true,
-        video: true,
-      });
-      setLocalStream(stream);
-    };
+const VideoCallScreen = ({route}: any) => {
+  // const {targetUser, offer} = route.params;
+  // const {appSocket} = useSocketStore();
+  // const [localStream, setLocalStream] = useState<MediaStream | null>();
+  // const [remoteStream, setRemoteStream] = useState<MediaStream | null>();
+  // const [isCalling, setIsCalling] = useState(false);
 
-    startLocalStream();
-  }, []);
+  // const receiveCallVideo = async () => {
+  //   try {
+  //     const answerSdp = offer;
+  //     const answer = new RTCSessionDescription({
+  //       type: 'answer',
+  //       sdp: answerSdp,
+  //     });
+  //     const response = await peerConnection.setRemoteDescription(answer);
+  //     console.log({response});
 
-  const startCall = async () => {
-    const configuration = {
-      iceServers: [{urls: 'stun:stun.l.google.com:19302'}],
-    };
-    const peerConnection = new RTCPeerConnection(configuration);
+  //     // // Use the received offerDescription
+  //     // const offerDescription = new RTCSessionDescription(offer);
+  //     // await peerConnection.setRemoteDescription(offerDescription);
 
-    // Add local stream to peer connection
-    localStream?.getTracks().forEach(track => {
-      peerConnection.addTrack(track, localStream);
-    });
+  //     // const answerDescription = await peerConnection.createAnswer();
+  //     // await peerConnection.setLocalDescription(answerDescription);
 
-    // Set up event handlers for the peer connection
+  //     // // Send the answerDescription back as a response to the offerDescription.
+  //     // appSocket?.sendCallVideo(targetUser?.conv?.id, answerDescription);
+  //   } catch (err) {
+  //     // Handle Errors
+  //   }
+  // };
 
-    // Create offer
-    const offer = await peerConnection.createOffer(undefined);
-    await peerConnection.setLocalDescription(offer);
-    console.log({offer});
+  // useEffect(() => {
+  //   offer && receiveCallVideo();
+  // }, [appSocket]);
 
-    // Send offer to remote user (using signaling server, not implemented in this example)
+  // useEffect(() => {
+  //   const startLocalStream = async () => {
+  //     const stream = await mediaDevices.getUserMedia({
+  //       audio: true,
+  //       video: {
+  //         frameRate: 30,
+  //         facingMode: 'user',
+  //       },
+  //     });
+  //     setLocalStream(stream);
+  //   };
 
-    // Handle answer from remote user (not implemented in this example)
-  };
+  //   startLocalStream();
+  // }, []);
+
+  // const startCall = async () => {
+  //   // Add local stream to peer connection
+  //   localStream?.getTracks().forEach(track => {
+  //     peerConnection.addTrack(track, localStream);
+  //   });
+
+  //   let sessionConstraints = {
+  //     mandatory: {
+  //       OfferToReceiveAudio: true,
+  //       OfferToReceiveVideo: true,
+  //       VoiceActivityDetection: true,
+  //     },
+  //   };
+  //   // Set up event handlers for the peer connection
+
+  //   // Create offer
+  //   const offerCreated = await peerConnection.createOffer(sessionConstraints);
+  //   await peerConnection.setLocalDescription(offerCreated);
+  //   // console.log({offer});
+  //   appSocket?.sendCallVideo(
+  //     targetUser?.conv?.id,
+  //     peerConnection.localDescription?.sdp,
+  //   );
+  // };
 
   return (
     <View>
       <Text>Video Call Screen</Text>
-      <RTCView
+      {/* <RTCView
         streamURL={localStream?.toURL()}
         style={{width: 200, height: 150}}
       />
@@ -58,7 +99,7 @@ const VideoCallScreen = () => {
         streamURL={remoteStream?.toURL()}
         style={{width: 200, height: 150}}
       />
-      <Button title="Start Call" onPress={startCall} disabled={isCalling} />
+      <Button title="Start Call" onPress={startCall} disabled={isCalling} /> */}
     </View>
   );
 };

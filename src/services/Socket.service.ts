@@ -15,7 +15,7 @@ export interface ISocketService {
   receiveUpdateIsSeenMessage: (listener: any) => void;
   deleteMessage: (messageId: number, conversationId: number) => void;
   receiveDeleteMessage: (listener: any) => void;
-  unmatch: (conversationId: number) => void;
+  unmatch: (conversationId: number, fullName: string) => void;
   receiveUnmatch: (listener: any) => void;
 }
 
@@ -36,7 +36,6 @@ export class SocketService implements ISocketService {
   }
 
   sendMessage(message: string, conversationId: number) {
-    console.log({message, conversationId});
     this.socket.emit(WS_EVENT.SEND_MESSAGE, {message, conversationId});
   }
 
@@ -69,11 +68,19 @@ export class SocketService implements ISocketService {
   receiveDeleteMessage(listener: any) {
     this.socket.on(WS_EVENT.RECEIVE_DELETE_MESSAGE, listener);
   }
-  unmatch(conversationId: number) {
-    this.socket.emit(WS_EVENT.UNMATCH, {conversationId});
+  unmatch(conversationId: number, fullName: string) {
+    this.socket.emit(WS_EVENT.UNMATCH, {conversationId, fullName});
   }
 
   receiveUnmatch(listener: any) {
     this.socket.on(WS_EVENT.RECEIVE_UNMATCH, listener);
+  }
+
+  sendCallVideo(conversationId: number, offer: any) {
+    this.socket.emit(WS_EVENT.CALL_VIDEO, {conversationId, offer});
+  }
+
+  receiveCallVideo(listener: any) {
+    this.socket.on(WS_EVENT.RECEIVE_CALL_VIDEO, listener);
   }
 }

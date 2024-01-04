@@ -4,6 +4,8 @@ import {useEffect} from 'react';
 import {ROUTE_NAMES} from '~utils/constants';
 import {Notifier, Easing} from 'react-native-notifier';
 import messaging from '@react-native-firebase/messaging';
+import {colors} from '~utils/colors';
+import {getCurrentRoute} from '~services/Navigation.service';
 
 export const useHandleNoti = () => {
   const {navigate} = useNavigation();
@@ -34,19 +36,23 @@ export const useHandleNoti = () => {
 
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Notifier.showNotification({
-        title: remoteMessage.notification?.title,
-        description: remoteMessage.notification?.body,
-        duration: 5000,
-        showAnimationDuration: 800,
-        showEasing: Easing.bounce,
-        onHidden: () => console.log('Hidden'),
-        onPress: () =>
-          navigateToConver(
-            JSON.parse(remoteMessage.data?.targetUser as string),
-          ),
-        hideOnPress: false,
-      });
+      getCurrentRoute().name !== ROUTE_NAMES.CONVERSATION &&
+        Notifier.showNotification({
+          componentProps: {
+            titleStyle: {color: colors.primary},
+          },
+          title: remoteMessage.notification?.title,
+          description: remoteMessage.notification?.body,
+          duration: 5000,
+          showAnimationDuration: 800,
+          showEasing: Easing.bounce,
+          onHidden: () => console.log('Hidden'),
+          onPress: () =>
+            navigateToConver(
+              JSON.parse(remoteMessage.data?.targetUser as string),
+            ),
+          hideOnPress: true,
+        });
     });
 
     return unsubscribe;

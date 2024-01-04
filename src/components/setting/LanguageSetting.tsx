@@ -5,8 +5,6 @@ import RNBounceable from '@freakycoder/react-native-bounceable';
 export const LanguageSetting = () => {
   const {getCurrentLanguage, changeLanguage} = useLanguageSettingController();
 
-  console.log(getCurrentLanguage());
-
   return (
     <View style={styles.container}>
       <Text>{getCurrentLanguage()}</Text>

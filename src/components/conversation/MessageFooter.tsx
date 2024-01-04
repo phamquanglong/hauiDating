@@ -19,7 +19,9 @@ import {IconButton} from '~components/IconButton';
 import ImageItem from '~components/edit-info/ImageItem';
 import useImagePicker from '~hooks/useImagePicker';
 import {colors} from '~utils/colors';
+import {useConversationStore} from '~zustands/useConversationStore';
 import {useSocketStore} from '~zustands/useSocketStore';
+import {useUserInfo} from '~zustands/useUserInfo';
 
 interface MessageFooterProps {
   targetUser: any;
@@ -27,10 +29,13 @@ interface MessageFooterProps {
 
 const MessageFooter = ({targetUser}: MessageFooterProps) => {
   const {t} = useTranslation();
+  const {userInfo} = useUserInfo();
   const {appSocket: socket} = useSocketStore();
+  const {setLatestMessage} = useConversationStore();
   const [input, setInput] = useState('');
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
   const {onLaunchCamera, onLaunchLibrary} = useImagePicker(
     5,
     setIsLoading,
@@ -64,10 +69,20 @@ const MessageFooter = ({targetUser}: MessageFooterProps) => {
         setImages([]);
       }
     }
+    setLatestMessage({
+      id: targetUser.id,
+      message:
+        images.length > 0 && input.length === 0 ? images.toString() : input,
+    });
     UserApi.pushNotification(targetUser.partnerId, {
       title: targetUser.fullName,
-      body: images.length > 0 && input.length === 0 ? images.toString() : input,
-      targetUser: JSON.stringify(targetUser),
+      body: images.length > 0 && input.length === 0 ? t('image') : input,
+      targetUser: JSON.stringify({
+        ...targetUser,
+        avatar: userInfo?.images[0].imageUrl,
+        fullName: userInfo?.profile.fullName,
+        conv: {id: targetUser?.conv?.id},
+      }),
     });
   };
 
